@@ -21,7 +21,6 @@ const excludedPaths = [
     "/api/auth/verify-email",
     "/api/auth/forgot-password",
     "/api/auth/reset-password",
-    "/api/auth/check-auth",
 ];
 
 export const authMiddleware = (tokenService: TokenService, userRepository: UserRepository) => {
