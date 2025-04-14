@@ -19,13 +19,10 @@ import { setupDependencies } from './dependencies';
 
 export default class Server {
     private app: Express;
-    private container = setupDependencies();
+    private container: any;
 
     constructor() {
         this.app = express();
-        this.setupMiddleware();
-        this.setupRoutes();
-        this.setupErrorHandlers();
     }
 
     private setupMiddleware() {
@@ -55,5 +52,12 @@ export default class Server {
                 resolve();
             });
         });
+    }
+
+    public init(): void {
+        this.container = setupDependencies();
+        this.setupMiddleware();
+        this.setupRoutes();
+        this.setupErrorHandlers();
     }
 }

@@ -12,21 +12,21 @@ export const CONFIG = {
     GMAIL_PASS: process.env.GMAIL_PASS,
 
     DEV_MONGODB_URI: process.env.DEV_MONGODB_URI,
+    DEV_POSTGRESQL_URI: process.env.DEV_POSTGRESQL_URI,
 
-    JWT_SECRET: process.env.JWT_SECRET || "",
-    REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || "",
-
-    JWT_EXPIRATION: "24h",
-    REFRESH_TOKEN_EXPIRATION: "7d",
-
+    POSTGRES_USER: process.env.POSTGRES_USER,
+    POSTGRES_HOST: process.env.POSTGRES_HOST,
+    POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD,
+    POSTGRES_DATABASE: process.env.POSTGRES_DATABASE,
+    POSTGRES_PORT: process.env.POSTGRES_PORT || 5432,
 
     JWT_SECRET_ACCESS_TOKEN: {
-        token: process.env.JWT_SECRET || "",
+        token: process.env.JWT_SECRET_ACCESS_TOKEN || "",
         age: "1d"
     },
 
     JWT_SECRET_REFRESH_TOKEN: {
-        token: process.env.REFRESH_TOKEN_SECRET || "",
+        token: process.env.JWT_SECRET_REFRESH_TOKEN || "",
         age: "7d"
     },
 

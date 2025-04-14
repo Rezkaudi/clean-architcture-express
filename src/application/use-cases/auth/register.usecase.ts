@@ -7,6 +7,7 @@ import { MailService } from "../../../domain/services/mail.service";
 import { UserRepository } from "../../../domain/repository/user.repository"
 import { EncryptionService } from "../../../domain/services/encryption.service";
 import { RandomStringGenerator } from "../../../domain/services/random-str-generator.service";
+import { UuidGeneratorService } from "../../../infrastructure/srevices/uuid-generator.service";
 
 
 export class RegisterUseCase {
@@ -17,7 +18,9 @@ export class RegisterUseCase {
         private readonly emailService: MailService,
         private readonly userRepository: UserRepository,
         private readonly encryptionService: EncryptionService,
+        private readonly uuidGeneratorService: UuidGeneratorService,
         private readonly randomStringGenerator: RandomStringGenerator,
+
     ) { }
 
     execute = async (registerData: RegisterDTO): Promise<string> => {
@@ -37,6 +40,7 @@ export class RegisterUseCase {
         const verificationToken = this.randomStringGenerator.generate(32);
 
         const user = {
+            _id: this.uuidGeneratorService.generate(),
             email: registerData.email,
             password: hashedPassword,
             firstName: registerData.firstName,
@@ -48,7 +52,6 @@ export class RegisterUseCase {
         }
 
         await this.userRepository.create(user);
-
 
         // send verification email
 

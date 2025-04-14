@@ -1,6 +1,6 @@
 
 import Server from "./presentation/Server";
-import Database from "./infrastructure/database/mongoDB";
+import Database from "./infrastructure/database/postgreSQL";
 
 async function main() {
     try {
@@ -8,6 +8,8 @@ async function main() {
         const db = Database.getInstance();
 
         await db.connect();
+
+        server.init();
         await server.run();
 
     } catch (error) {

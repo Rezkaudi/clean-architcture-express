@@ -5,6 +5,7 @@ type UserDocument = UserType & Document;
 
 const userSchema = new Schema<UserDocument>(
     {
+        _id: { type: String, default: () => crypto.randomUUID() },
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
         firstName: { type: String, required: true },
