@@ -17,6 +17,7 @@ import {
     ResetPasswordUseCase,
     ForgotPasswordUseCase,
     RefreshAccessTokenUseCase,
+    UpdatePasswordUseCase,
 } from '../../application/use-cases/auth';
 
 
@@ -83,6 +84,11 @@ export const setupDependencies = () => {
         secretRefreshToken,
     );
 
+    const updatePasswordUseCase = new UpdatePasswordUseCase(
+        encryptionService,
+        userRepository
+    );
+
 
     // Controllers
     const authController = new AuthController(
@@ -91,7 +97,8 @@ export const setupDependencies = () => {
         verifyEmailUseCase,
         resetPasswordUseCase,
         forgotPasswordUseCase,
-        refreshAccessTokenUseCase
+        refreshAccessTokenUseCase,
+        updatePasswordUseCase
     );
 
     const rootController = new RootController()

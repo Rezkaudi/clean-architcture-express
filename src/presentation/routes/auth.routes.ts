@@ -9,6 +9,7 @@ import {
     verifyEmailValidator,
     resetPasswordValidator,
     forgotPasswordValidator,
+    updatePasswordValidator,
 } from "../validators/auth.validators"
 
 const authRoutes = (authController: AuthController): Router => {
@@ -22,6 +23,7 @@ const authRoutes = (authController: AuthController): Router => {
     router.post("/refresh-token", authController.refreshAccessToken.bind(authController))
     router.post("/reset-password", resetPasswordValidator, authController.resetPassword.bind(authController))
     router.post("/forgot-password", forgotPasswordValidator, authController.forgotPassword.bind(authController))
+    router.patch("/update-password", updatePasswordValidator, authController.updatePassword.bind(authController))
 
     return router;
 };
