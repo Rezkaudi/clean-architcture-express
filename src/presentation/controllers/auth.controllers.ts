@@ -6,7 +6,8 @@ import {
     VerifyEmailUseCase,
     ResetPasswordUseCase,
     ForgotPasswordUseCase,
-    RefreshAccessTokenUseCase
+    RefreshAccessTokenUseCase,
+    UpdatePasswordUseCase
 } from "../../application/use-cases/auth";
 
 import { CONFIG } from "../config/env";
@@ -15,7 +16,6 @@ import { LoginDTO, RegisterDTO, ResetPasswordDTO, TokenDTO } from "../../applica
 import { ForbiddenError } from "../../application/errors/application-error";
 import { ApplicationResponse } from "../../application/response/application-resposne";
 import { Messages, StatusCodes } from "../config/constant";
-import { UpdatePasswordUseCase } from "../../application/use-cases/auth";
 import { UpdatePasswordDTO } from "../../application/dtos/user.dto";
 
 export class AuthController {
