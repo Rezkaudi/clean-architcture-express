@@ -29,3 +29,9 @@ export interface AuthResposnseDTO {
     accessToken: string,
     refreshToken: string
 }
+
+export interface UpdatePasswordDTO {
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+}

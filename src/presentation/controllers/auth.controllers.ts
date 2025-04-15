@@ -6,15 +6,18 @@ import {
     VerifyEmailUseCase,
     ResetPasswordUseCase,
     ForgotPasswordUseCase,
-    RefreshAccessTokenUseCase
+    RefreshAccessTokenUseCase,
+    UpdatePasswordUseCase
 } from "../../application/use-cases/auth";
 
 import { CONFIG } from "../config/env";
-import { ApiResponse } from "../../domain/interface/response";
-import { LoginDTO, RegisterDTO, ResetPasswordDTO, TokenDTO } from "../../application/dtos/user.dto";
+import { Messages, StatusCodes } from "../config/constant";
+
+import { LoginDTO, RegisterDTO, ResetPasswordDTO, TokenDTO, UpdatePasswordDTO } from "../../application/dtos/user.dto";
+
 import { ForbiddenError } from "../../application/errors/application-error";
 import { ApplicationResponse } from "../../application/response/application-resposne";
-import { Messages, StatusCodes } from "../config/constant";
+
 
 export class AuthController {
     constructor(
@@ -24,6 +27,7 @@ export class AuthController {
         private readonly resetPasswordUseCase: ResetPasswordUseCase,
         private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
         private readonly refreshAccessTokenUseCase: RefreshAccessTokenUseCase,
+        private readonly updatePasswordUseCase: UpdatePasswordUseCase,
     ) { }
 
     private setTokenCookie(res: Response, token: TokenDTO, tokenValue: string): void {
@@ -199,6 +203,30 @@ export class AuthController {
             data: { isAuthenticated: !!(req as any).user },
             message: ""
         }).send()
+    };
+
+    updatePassword = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const { currentPassword, newPassword } = req.body;
+
+            const updatePasswordData: UpdatePasswordDTO = {
+                userId: req.user._id,
+                currentPassword,
+                newPassword
+            }
+
+            await this.updatePasswordUseCase.execute(updatePasswordData);
+
+            return new ApplicationResponse(res, {
+                statusCode: StatusCodes.OK,
+                success: true,
+                data: {},
+                message: "Password updated successfully"
+            }).send()
+
+        } catch (error) {
+            throw error
+        }
     };
 }
 
