@@ -59,3 +59,9 @@ export const forgotPasswordValidator = [
         notEmpty().withMessage('Email is required'),
     validateRequest,
 ]
+
+export const updatePasswordValidator = [
+    body('currentPassword').notEmpty().withMessage('Current password is required'),
+    body('newPassword').notEmpty().withMessage('New password is required'),
+    validateRequest,
+]
