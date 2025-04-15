@@ -11,12 +11,13 @@ import {
 } from "../../application/use-cases/auth";
 
 import { CONFIG } from "../config/env";
-import { ApiResponse } from "../../domain/interface/response";
-import { LoginDTO, RegisterDTO, ResetPasswordDTO, TokenDTO } from "../../application/dtos/user.dto";
+import { Messages, StatusCodes } from "../config/constant";
+
+import { LoginDTO, RegisterDTO, ResetPasswordDTO, TokenDTO, UpdatePasswordDTO } from "../../application/dtos/user.dto";
+
 import { ForbiddenError } from "../../application/errors/application-error";
 import { ApplicationResponse } from "../../application/response/application-resposne";
-import { Messages, StatusCodes } from "../config/constant";
-import { UpdatePasswordDTO } from "../../application/dtos/user.dto";
+
 
 export class AuthController {
     constructor(
@@ -206,23 +207,23 @@ export class AuthController {
 
     updatePassword = async (req: Request, res: Response): Promise<void> => {
         try {
-            const { userId, currentPassword, newPassword } = req.body;
-    
+            const { currentPassword, newPassword } = req.body;
+
             const updatePasswordData: UpdatePasswordDTO = {
-                userId,
+                userId: req.user._id,
                 currentPassword,
                 newPassword
             }
-    
+
             await this.updatePasswordUseCase.execute(updatePasswordData);
-    
+
             return new ApplicationResponse(res, {
                 statusCode: StatusCodes.OK,
                 success: true,
                 data: {},
                 message: "Password updated successfully"
             }).send()
-    
+
         } catch (error) {
             throw error
         }
