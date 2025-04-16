@@ -35,3 +35,19 @@ export interface UpdatePasswordDTO {
     currentPassword: string,
     newPassword: string,
 }
+
+export interface UserInfoDTO {
+    profileImageUrl: string | null,
+    profileImage?: File | null,
+    firstName: string,
+    lastName: string,
+    biography: string | null,
+    email: string,
+    phoneNumber: string | null,
+    degree: string | null,
+    university: string | null,
+    links: {
+        type: string,
+        url: string
+    }[] | null,
+}

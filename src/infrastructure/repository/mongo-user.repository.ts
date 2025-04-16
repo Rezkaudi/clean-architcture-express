@@ -6,7 +6,7 @@ import { UserRepository } from "../../domain/repository/user.repository"
 
 export class MongoUserRepository implements UserRepository {
 
-    create = async (user: User): Promise<User> => {
+    create = async (user: Partial<User>): Promise<User> => {
         const newUser = new UserModel(user);
         const savedUser = await newUser.save();
         return savedUser;
@@ -24,8 +24,8 @@ export class MongoUserRepository implements UserRepository {
         return await UserModel.findOne({ verificationToken }).exec()
     }
 
-    update = async (userId: string, userData: Partial<User>): Promise<void> => {
-        await UserModel.findByIdAndUpdate(userId, { $set: userData }).exec();
+    update = async (userId: string, userData: Partial<User>): Promise<User | null> => {
+        return await UserModel.findByIdAndUpdate(userId, { $set: userData }).exec();
     }
 
     delete = async (id: string): Promise<void> => {

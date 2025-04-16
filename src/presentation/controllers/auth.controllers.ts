@@ -7,7 +7,8 @@ import {
     ResetPasswordUseCase,
     ForgotPasswordUseCase,
     RefreshAccessTokenUseCase,
-    UpdatePasswordUseCase
+    UpdatePasswordUseCase,
+    ResendVerificationUseCase
 } from "../../application/use-cases/auth";
 
 import { CONFIG } from "../config/env";
@@ -28,6 +29,8 @@ export class AuthController {
         private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
         private readonly refreshAccessTokenUseCase: RefreshAccessTokenUseCase,
         private readonly updatePasswordUseCase: UpdatePasswordUseCase,
+        private readonly resendVerificationUseCase: ResendVerificationUseCase,
+
     ) { }
 
     private setTokenCookie(res: Response, token: TokenDTO, tokenValue: string): void {
@@ -223,6 +226,25 @@ export class AuthController {
                 data: {},
                 message: "Password updated successfully"
             }).send()
+
+        } catch (error) {
+            throw error
+        }
+    };
+
+    resendVerification = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const { email } = req.body;
+
+            const verificationToken = await this.resendVerificationUseCase.execute(email);
+
+            return new ApplicationResponse(res, {
+                statusCode: StatusCodes.CREATED,
+                success: true,
+                data: { verificationToken },
+                message: Messages.RESEND_VERIFICATION_SUCCESS
+            }).send()
+
 
         } catch (error) {
             throw error

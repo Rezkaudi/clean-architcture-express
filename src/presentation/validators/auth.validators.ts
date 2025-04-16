@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { body, check, param, validationResult } from 'express-validator';
+import { body, check, validationResult } from 'express-validator';
+
+import { ApplicationResponse } from '../../application/response/application-resposne';
+
 
 export const validateRequest = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
@@ -9,11 +12,13 @@ export const validateRequest = (req: Request, res: Response, next: NextFunction)
             message: err.msg as string
         }));
 
-        res.status(400).json({
+        return new ApplicationResponse(res, {
             statusCode: 400,
+            success: false,
+            data: {},
             message: errorMessages[0].message
-        })
-        // throw new Error(errorMessages[0].message)
+        }).send()
+
     }
     next();
 };
@@ -54,6 +59,13 @@ export const resetPasswordValidator = [
 ]
 
 export const forgotPasswordValidator = [
+    body('email').
+        isEmail().withMessage('Email must be valid').
+        notEmpty().withMessage('Email is required'),
+    validateRequest,
+]
+
+export const resendVerifyEmailValidator = [
     body('email').
         isEmail().withMessage('Email must be valid').
         notEmpty().withMessage('Email is required'),

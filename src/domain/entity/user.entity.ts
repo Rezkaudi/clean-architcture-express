@@ -4,8 +4,18 @@ export interface User {
     password: string;
     firstName: string;
     lastName: string;
-    profileImageUrl?: string | null;
     isVerified: boolean;
+
+    biography: string | null,
+    phoneNumber: string | null,
+    degree: string | null,
+    university: string | null,
+    links: {
+        type: string,
+        url: string
+    }[] | null,
+
+    profileImageUrl?: string | null;
     resetPasswordToken?: string | null;
     resetPasswordExpiresAt?: Date | null;
     verificationToken?: string | null;

@@ -25,7 +25,7 @@ export default class Database {
             await mongoose.connect(CONFIG.DEV_MONGODB_URI!);
             this.isConnected = true;
 
-            console.log("Connected to PostgreSQL");
+            console.log("Connected to MongoDB");
 
         } catch (error) {
             if (error instanceof Error) {

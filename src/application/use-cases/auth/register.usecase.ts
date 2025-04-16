@@ -45,8 +45,6 @@ export class RegisterUseCase {
             password: hashedPassword,
             firstName: registerData.firstName,
             lastName: registerData.lastName,
-            profileImageUrl: undefined,
-            isVerified: false,
             verificationToken,
             verificationTokenExpiresAt: this.verificationTokenExpiresAt,
         }
