@@ -5,9 +5,11 @@ import { JwtTokenService } from '../../infrastructure/srevices/jwt-token.service
 import { BcryptPasswordHasher } from '../../infrastructure/srevices/bcrypt-password-hasher';
 import { NodemailerGmailService } from '../../infrastructure/srevices/nodemailer-gmail.service';
 import { CryptoRandomStringGenerator } from '../../infrastructure/srevices/crypto-random-string-generator';
+import { UuidGeneratorService } from '../../infrastructure/srevices/uuid-generator.service';
 
 // Repositories
 import { MongoUserRepository } from '../../infrastructure/repository/mongo-user.repository';
+import { PostgreSQLUserRepository } from '../../infrastructure/repository/postgresql-user.repository';
 
 // Use Cases
 import {
@@ -36,7 +38,11 @@ export const setupDependencies = () => {
 
     // Repositories
     const tokenService = new JwtTokenService()
-    const userRepository = new MongoUserRepository();
+
+    const userRepository = new PostgreSQLUserRepository();
+    // const userRepository = new MongoUserRepository();
+
+    const uuidGeneratorService = new UuidGeneratorService()
     const randomStringGenerator = new CryptoRandomStringGenerator()
     const encryptionService = new BcryptPasswordHasher(CONFIG.SALT_ROUNDS_BCRYPT)
     const emailService = new NodemailerGmailService(CONFIG.GMAIL_USER!, CONFIG.GMAIL_PASS!)
@@ -55,6 +61,7 @@ export const setupDependencies = () => {
         emailService,
         userRepository,
         encryptionService,
+        uuidGeneratorService,
         randomStringGenerator
     );
 

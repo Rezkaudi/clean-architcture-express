@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
 import { CONFIG } from "../../../presentation/config/env";
 
-const MONGODB_URI = CONFIG.DEV_MONGODB_URI;
-
 export default class Database {
     private static instance: Database;
     private isConnected: boolean = false;
@@ -24,10 +22,11 @@ export default class Database {
 
         console.log(`New connection to MongoDB`);
         try {
-            console.log("mongo_uri: ", MONGODB_URI);
-            const conn = await mongoose.connect(MONGODB_URI!);
+            await mongoose.connect(CONFIG.DEV_MONGODB_URI!);
             this.isConnected = true;
-            console.log(`MongoDB Connected: ${conn.connection.host}`);
+
+            console.log("Connected to PostgreSQL");
+
         } catch (error) {
             if (error instanceof Error) {
                 console.log("Error connecting to MongoDB:", error.message);
