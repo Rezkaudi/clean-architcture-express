@@ -18,8 +18,6 @@ const userSchema = new Schema<UserDocument>(
         profileImageUrl: { type: String, default: null },
         isVerified: { type: Boolean, default: false },
 
-        resetPasswordToken: { type: String, default: null },
-        resetPasswordExpiresAt: { type: Date, default: null },
         verificationToken: { type: String, default: null },
         verificationTokenExpiresAt: { type: Date, default: null },
 

@@ -1,5 +1,6 @@
 
 import cors from 'cors';
+import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import express, { Express } from "express";
 
@@ -34,7 +35,7 @@ export default class Server {
         this.app.use(express.json());
         this.app.use(cookieParser());
         this.app.use(express.static("public"));
-        this.app.use(express.urlencoded({ extended: false }));
+        this.app.use(express.urlencoded({ extended: true }));
         this.app.use(authMiddleware(this.container.tokenService, this.container.userRepository))
     }
 

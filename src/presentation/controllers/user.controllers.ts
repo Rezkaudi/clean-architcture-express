@@ -43,23 +43,20 @@ export class UserController {
     updateUserInfo = async (req: Request, res: Response): Promise<void> => {
         try {
             const userId = req.user._id
-            const { profileImage, firstName, lastName, biography, email, phoneNumber, degree, university, links } = req.body;
-
+            const { profileImageUrl, firstName, lastName, biography, email, phoneNumber, degree, university, links } = req.body;
 
             const updatedUserData: Partial<UserInfoDTO> = {
                 ...(firstName && { firstName }),
                 ...(lastName && { lastName }),
-                ...(biography && { biography }),
+                ...(biography !== undefined && { biography }),
                 ...(email && { email }),
-                ...(phoneNumber && { phoneNumber }),
-                ...(degree && { degree }),
-                ...(university && { university }),
-                ...(links && { links }),
-                ...(profileImage && { profileImage }),
+                ...(phoneNumber !== undefined && { phoneNumber }),
+                ...(degree !== undefined && { degree }),
+                ...(university !== undefined && { university }),
+                ...(profileImageUrl !== undefined && { profileImageUrl }),
+                ...(links !== undefined && { links }),
             };
 
-
-            console.log(updatedUserData)
 
             const updatedUserInfo = await this.updateUserInfoUseCase.execute(userId, updatedUserData)
 

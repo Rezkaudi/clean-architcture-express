@@ -38,7 +38,6 @@ export interface UpdatePasswordDTO {
 
 export interface UserInfoDTO {
     profileImageUrl: string | null,
-    profileImage?: File | null,
     firstName: string,
     lastName: string,
     biography: string | null,

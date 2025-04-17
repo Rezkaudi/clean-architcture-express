@@ -25,7 +25,7 @@ export class MongoUserRepository implements UserRepository {
     }
 
     update = async (userId: string, userData: Partial<User>): Promise<User | null> => {
-        return await UserModel.findByIdAndUpdate(userId, { $set: userData }).exec();
+        return await UserModel.findByIdAndUpdate(userId, { $set: userData }, { new: true }).exec();
     }
 
     delete = async (id: string): Promise<void> => {

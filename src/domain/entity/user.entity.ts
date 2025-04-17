@@ -5,7 +5,6 @@ export interface User {
     firstName: string;
     lastName: string;
     isVerified: boolean;
-
     biography: string | null,
     phoneNumber: string | null,
     degree: string | null,
@@ -16,8 +15,6 @@ export interface User {
     }[] | null,
 
     profileImageUrl?: string | null;
-    resetPasswordToken?: string | null;
-    resetPasswordExpiresAt?: Date | null;
     verificationToken?: string | null;
     verificationTokenExpiresAt?: Date | null;
 }
