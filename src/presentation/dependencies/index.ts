@@ -3,9 +3,10 @@ import { CONFIG } from '../config/env';
 // Srevices
 import { JwtTokenService } from '../../infrastructure/srevices/jwt-token.service';
 import { BcryptPasswordHasher } from '../../infrastructure/srevices/bcrypt-password-hasher';
+import { UuidGeneratorService } from '../../infrastructure/srevices/uuid-generator.service';
 import { NodemailerGmailService } from '../../infrastructure/srevices/nodemailer-gmail.service';
 import { CryptoRandomStringGenerator } from '../../infrastructure/srevices/crypto-random-string-generator';
-import { UuidGeneratorService } from '../../infrastructure/srevices/uuid-generator.service';
+
 
 // Repositories
 import { MongoUserRepository } from '../../infrastructure/repository/mongo-user.repository';
@@ -20,12 +21,15 @@ import {
     ForgotPasswordUseCase,
     RefreshAccessTokenUseCase,
     UpdatePasswordUseCase,
+    ResendVerificationUseCase
 } from '../../application/use-cases/auth';
 
 
 // Controllers
 import { AuthController } from '../controllers/auth.controllers';
 import { RootController } from '../controllers/root.controllers';
+import { UserController } from '../controllers/user.controllers';
+import { DeleteUserAccountUseCase, GetUserInfoUseCase, UpdateUserInfoUseCase } from '../../application/use-cases/user';
 
 
 export const setupDependencies = () => {
@@ -37,17 +41,19 @@ export const setupDependencies = () => {
     const secretRefreshToken = CONFIG.JWT_SECRET_REFRESH_TOKEN
 
     // Repositories
+    // const userRepository = new PostgreSQLUserRepository();
+    const userRepository = new MongoUserRepository();
+
+    // Services
     const tokenService = new JwtTokenService()
-
-    const userRepository = new PostgreSQLUserRepository();
-    // const userRepository = new MongoUserRepository();
-
     const uuidGeneratorService = new UuidGeneratorService()
     const randomStringGenerator = new CryptoRandomStringGenerator()
     const encryptionService = new BcryptPasswordHasher(CONFIG.SALT_ROUNDS_BCRYPT)
     const emailService = new NodemailerGmailService(CONFIG.GMAIL_USER!, CONFIG.GMAIL_PASS!)
 
     // Use Cases
+
+    // 1- Auth
     const loginUseCase = new LoginUseCase(
         secretAccessToken,
         secretRefreshToken,
@@ -96,6 +102,25 @@ export const setupDependencies = () => {
         userRepository
     );
 
+    const resendVerificationUseCase = new ResendVerificationUseCase(
+        serverUrl,
+        emailService,
+        userRepository,
+        randomStringGenerator
+    );
+
+    // 2- User
+    const getUserInfoUseCase = new GetUserInfoUseCase(
+        userRepository,
+    );
+
+    const updateUserInfoUseCase = new UpdateUserInfoUseCase(
+        userRepository,
+    );
+
+    const deleteUserAccountUseCase = new DeleteUserAccountUseCase(
+        userRepository,
+    );
 
     // Controllers
     const authController = new AuthController(
@@ -105,17 +130,24 @@ export const setupDependencies = () => {
         resetPasswordUseCase,
         forgotPasswordUseCase,
         refreshAccessTokenUseCase,
-        updatePasswordUseCase
+        updatePasswordUseCase,
+        resendVerificationUseCase
+    );
+
+    const userController = new UserController(
+        getUserInfoUseCase,
+        updateUserInfoUseCase,
+        deleteUserAccountUseCase,
     );
 
     const rootController = new RootController()
-
 
 
     return {
         tokenService,
         userRepository,
         authController,
-        rootController
+        rootController,
+        userController
     };
 };

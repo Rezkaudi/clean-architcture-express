@@ -1,19 +1,23 @@
 
 import cors from 'cors';
+import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import express, { Express } from "express";
 
+// configs
 import { CONFIG } from "./config/env";
 
+// middleware
 import { logger } from './middleware/logger.middleware';
-import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { authMiddleware } from './middleware/auth.middleware';
-
+import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 
 // routes
 import rootRoute from './routes/root.routes';
 import authRoutes from './routes/auth.routes';
+import userRoutes from './routes/user.routes';
 
+// dependencies
 import { setupDependencies } from './dependencies';
 
 
@@ -31,13 +35,14 @@ export default class Server {
         this.app.use(express.json());
         this.app.use(cookieParser());
         this.app.use(express.static("public"));
-        this.app.use(express.urlencoded({ extended: false }));
+        this.app.use(express.urlencoded({ extended: true }));
         this.app.use(authMiddleware(this.container.tokenService, this.container.userRepository))
     }
 
     private setupRoutes() {
         this.app.use("/", rootRoute(this.container.rootController));
         this.app.use('/api/auth', authRoutes(this.container.authController));
+        this.app.use('/api/user', userRoutes(this.container.userController));
     }
 
     private setupErrorHandlers() {

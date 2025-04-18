@@ -40,15 +40,17 @@ export class PostgreSQLUserRepository implements UserRepository {
         return result.rows[0] || null;
     };
 
-    update = async (userId: string, userData: Partial<User>): Promise<void> => {
+    update = async (userId: string, userData: Partial<User>): Promise<User | null> => {
         const fields = Object.keys(userData);
         const values = Object.values(userData);
 
-        if (fields.length === 0) return;
+        if (fields.length === 0) return null;
 
         const setClause = fields.map((field, index) => `"${field}" = $${index + 2}`).join(", ");
         const query = `UPDATE users SET ${setClause} WHERE _id = $1;`;
-        await this.pool.query(query, [userId, ...values]);
+        const result = await this.pool.query(query, [userId, ...values]);
+
+        return result.rows[0] || null;
     };
 
     delete = async (id: string): Promise<void> => {

@@ -5,3 +5,4 @@ export * from './reset-password.usecase';
 export * from './forgot-password.usecase';
 export * from './refresh-access-token.usecase';
 export * from './update-password.usecase';
+export * from './resend-verification.usecase';
