@@ -5,6 +5,8 @@ import express, { Express } from "express";
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from '../swagger';
 
+console.log(JSON.stringify(swaggerSpec, null, 2));
+
 import { logger } from './middleware/logger.middleware';
 import { authMiddleware } from './middleware/auth.middleware';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
@@ -54,8 +56,8 @@ export default class Server {
     }
 
     public init(): void {
-        this.container = setupDependencies();
         this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+        this.container = setupDependencies()
         this.setupMiddleware();
         this.setupRoutes();
         this.setupErrorHandlers();
