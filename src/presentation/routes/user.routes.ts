@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { UserController } from '../controllers/user.controllers';
 
-let userController: UserController; 
+let userController: UserController;
 
 /**
  * @swagger

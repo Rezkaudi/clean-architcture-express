@@ -37,7 +37,7 @@ export class AuthController {
 
         res.cookie(token.name, tokenValue, {
             httpOnly: true,
-            secure: CONFIG.NODE_ENV === "production",
+            secure: true,
             sameSite: "none",
             maxAge: token.age,
         });
@@ -54,12 +54,12 @@ export class AuthController {
                 password
             }
 
-            const verificationToken = await this.registerUseCase.execute(registerData);
+            await this.registerUseCase.execute(registerData);
 
             return new ApplicationResponse(res, {
                 statusCode: StatusCodes.CREATED,
                 success: true,
-                data: { verificationToken },
+                data: {},
                 message: Messages.REGISTER_SUCCESS
             }).send()
 
@@ -100,7 +100,7 @@ export class AuthController {
         try {
             const cookieOptions = {
                 httpOnly: true,
-                secure: CONFIG.NODE_ENV === "production",
+                secure: true,
                 sameSite: "none" as const
             }
 
@@ -141,10 +141,9 @@ export class AuthController {
 
     resetPassword = async (req: Request, res: Response): Promise<void> => {
         try {
-            const { verificationToken } = req.query;
-            const { newPassword } = req.body;
+            const { newPassword, resetPasswordToken } = req.body;
 
-            await this.resetPasswordUseCase.execute({ verificationToken, newPassword } as ResetPasswordDTO);
+            await this.resetPasswordUseCase.execute({ resetPasswordToken, newPassword } as ResetPasswordDTO);
 
             return new ApplicationResponse(res, {
                 statusCode: StatusCodes.OK,
@@ -162,12 +161,12 @@ export class AuthController {
         try {
             const { email } = req.body;
 
-            const verificationToken = await this.forgotPasswordUseCase.execute(email);
+            await this.forgotPasswordUseCase.execute(email);
 
             return new ApplicationResponse(res, {
                 statusCode: StatusCodes.OK,
                 success: true,
-                data: { verificationToken },
+                data: {},
                 message: Messages.FORGOT_PASSWORD_SUCCESS
             }).send()
 
@@ -236,12 +235,12 @@ export class AuthController {
         try {
             const { email } = req.body;
 
-            const verificationToken = await this.resendVerificationUseCase.execute(email);
+            await this.resendVerificationUseCase.execute(email);
 
             return new ApplicationResponse(res, {
-                statusCode: StatusCodes.CREATED,
+                statusCode: StatusCodes.OK,
                 success: true,
-                data: { verificationToken },
+                data: {},
                 message: Messages.RESEND_VERIFICATION_SUCCESS
             }).send()
 

@@ -17,4 +17,7 @@ export interface User {
     profileImageUrl?: string | null;
     verificationToken?: string | null;
     verificationTokenExpiresAt?: Date | null;
+
+    resetPasswordToken?: string | null;
+    resetPasswordTokenExpiresAt?: Date | null;
 }

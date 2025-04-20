@@ -4,7 +4,7 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Pathway Repository Project API Documentation', 
+      title: 'Pathway Repository Project API Documentation',
       version: '1.0.0',
       description: 'API documentation for the Pathway Repository Project of SOKA University',
     },

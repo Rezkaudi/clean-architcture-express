@@ -86,10 +86,10 @@
  *     ResetPasswordDTO:
  *       type: object
  *       required:
- *         - verificationToken
+ *         - resetPasswordToken
  *         - newPassword
  *       properties:
- *         verificationToken:
+ *         resetPasswordToken:
  *           type: string
  *         newPassword:
  *           type: string
@@ -147,7 +147,7 @@ export interface SecretTokenDTO {
 }
 
 export interface ResetPasswordDTO {
-    verificationToken: string,
+    resetPasswordToken: string,
     newPassword: string,
 }
 

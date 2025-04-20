@@ -51,9 +51,7 @@ export const verifyEmailValidator = [
 ]
 
 export const resetPasswordValidator = [
-    check('verificationToken')
-        .exists()
-        .withMessage('Verification token is required'),
+    body("resetPasswordToken").notEmpty().withMessage('resetPassword token is required'),
     body("newPassword").notEmpty().withMessage('Password is required'),
     validateRequest,
 ]
