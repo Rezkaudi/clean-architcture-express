@@ -13,31 +13,32 @@ export class ForgotPasswordUseCase {
         private readonly randomStringGenerator: RandomStringGenerator,
     ) { }
 
-    execute = async (email: string): Promise<string> => {
+    execute = async (email: string): Promise<void> => {
         const user = await this.userRepository.findByEmail(email);
 
         if (!user) {
             throw new BadRequestError("User not found");
         }
 
-        const verificationTokenExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 1 day from now
-        const verificationToken = this.randomStringGenerator.generate(32);
+        const resetPasswordTokenExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 1 day from now
+        const resetPasswordToken = this.randomStringGenerator.generate(32);
 
         await this.userRepository.update(user._id!, {
-            verificationToken,
-            verificationTokenExpiresAt
+            resetPasswordToken,
+            resetPasswordTokenExpiresAt
         });
 
         // send email
-        const resetPasswordUrl = `${this.frontEndUrl}/reset-password?verificationToken=${verificationToken}`
-        const subject = "forgot password"
+        const resetPasswordUrl = `${this.frontEndUrl}/reset-password?resetPasswordToken=${resetPasswordToken}`
+        const subject = "Reset Password Verification"
         const template = `
-        <h4>forgot password</h4>
-        <a href="${resetPasswordUrl}">reset</a>
-        `
-        await this.emailService.send(email, subject, template)
+        <h4>Please Reset Password</h4>
+        <p>Click the link below to Reset Password:</p>
+        <a href="${resetPasswordUrl}">Reset Password</a>
+        <p>If the button doesn't work, use the token below:</p>
+        <code>${resetPasswordToken}</code>
+    `;
 
-        // temporary
-        return verificationToken
+        await this.emailService.send(email, subject, template)
     }
 }

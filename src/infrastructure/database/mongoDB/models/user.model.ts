@@ -21,6 +21,9 @@ const userSchema = new Schema<UserDocument>(
         verificationToken: { type: String, default: null },
         verificationTokenExpiresAt: { type: Date, default: null },
 
+        resetPasswordToken: { type: String, default: null },
+        resetPasswordTokenExpiresAt: { type: Date, default: null },
+
         biography: { type: String, default: null },
         phoneNumber: { type: String, default: null },
         degree: { type: String, default: null },

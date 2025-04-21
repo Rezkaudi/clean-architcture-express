@@ -18,12 +18,16 @@ export class ResendVerificationUseCase {
 
     ) { }
 
-    execute = async (email: string): Promise<string> => {
+    execute = async (email: string): Promise<void> => {
 
         const existingUser = await this.userRepository.findByEmail(email);
 
         if (!existingUser) {
             throw new BadRequestError("User Not Found");
+        }
+
+        if (existingUser.isVerified) {
+            throw new BadRequestError("Email is already verified. Please Login");
         }
 
         const verificationToken = this.randomStringGenerator.generate(32);
@@ -36,17 +40,17 @@ export class ResendVerificationUseCase {
         await this.userRepository.update(existingUser._id!, updatedUser);
 
         // send verification email
-
         const verifyUrl = `${this.ServerUrl}/api/auth/verify-email?verificationToken=${verificationToken}`
-        const subject = "verify your email"
+        const subject = "Verify Your Email";
         const template = `
-        <h4>verify your email</h4>
-        <a href="${verifyUrl}">verify</a>
-        `
-        await this.emailService.send(email, subject, template)
+            <h4>Please Verify Your Email</h4>
+            <p>Click the link below to verify your email:</p>
+            <a href="${verifyUrl}">Verify Email</a>
+            <p>If the button doesn't work, use the token below:</p>
+            <code>${verificationToken}</code>
+        `;
 
-        // temporary
-        return verificationToken
+        await this.emailService.send(email, subject, template)
 
     };
 }

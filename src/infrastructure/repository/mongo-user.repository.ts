@@ -24,6 +24,10 @@ export class MongoUserRepository implements UserRepository {
         return await UserModel.findOne({ verificationToken }).exec()
     }
 
+    findByResetPasswordToken = async (resetPasswordToken: string): Promise<User | null> => {
+        return await UserModel.findOne({ resetPasswordToken }).exec()
+    }
+
     update = async (userId: string, userData: Partial<User>): Promise<User | null> => {
         return await UserModel.findByIdAndUpdate(userId, { $set: userData }, { new: true }).exec();
     }

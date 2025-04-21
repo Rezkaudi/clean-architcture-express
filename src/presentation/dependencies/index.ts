@@ -41,8 +41,8 @@ export const setupDependencies = () => {
     const secretRefreshToken = CONFIG.JWT_SECRET_REFRESH_TOKEN
 
     // Repositories
-    // const userRepository = new PostgreSQLUserRepository();
-    const userRepository = new MongoUserRepository();
+    const userRepository = new PostgreSQLUserRepository();
+    // const userRepository = new MongoUserRepository();
 
     // Services
     const tokenService = new JwtTokenService()

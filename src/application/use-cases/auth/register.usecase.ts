@@ -23,7 +23,7 @@ export class RegisterUseCase {
 
     ) { }
 
-    execute = async (registerData: RegisterDTO): Promise<string> => {
+    execute = async (registerData: RegisterDTO): Promise<void> => {
 
         const existingUser = await this.userRepository.findByEmail(registerData.email);
 
@@ -52,17 +52,16 @@ export class RegisterUseCase {
         await this.userRepository.create(user);
 
         // send verification email
-
         const verifyUrl = `${this.ServerUrl}/api/auth/verify-email?verificationToken=${verificationToken}`
-        const subject = "verify your email"
+        const subject = "Verify Your Email";
         const template = `
-        <h4>verify your email</h4>
-        <a href="${verifyUrl}">verify</a>
-        `
+            <h4>Please Verify Your Email</h4>
+            <p>Click the link below to verify your email:</p>
+            <a href="${verifyUrl}">Verify Email</a>
+            <p>If the button doesn't work, use the token below:</p>
+            <code>${verificationToken}</code>
+        `;
         await this.emailService.send(registerData.email, subject, template)
-
-        // temporary
-        return verificationToken
 
     };
 }

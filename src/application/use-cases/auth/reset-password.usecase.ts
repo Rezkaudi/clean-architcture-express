@@ -15,17 +15,19 @@ export class ResetPasswordUseCase {
     ) { }
 
     execute = async (resetPasswordData: ResetPasswordDTO): Promise<void> => {
-        const user = await this.userRepository.findByVerificationToken(resetPasswordData.verificationToken);
+        console.log(resetPasswordData.resetPasswordToken)
+        const user = await this.userRepository.findByResetPasswordToken(resetPasswordData.resetPasswordToken);
+
         if (!user) {
-            throw new BadRequestError("Invalid or expired verificationToken");
+            throw new BadRequestError("Invalid or expired resetPasswordToken");
         }
 
         const hashedNewPassword = await this.encryptionService.hash(resetPasswordData.newPassword);
 
         await this.userRepository.update(user._id!, {
             password: hashedNewPassword,
-            verificationToken: null,
-            verificationTokenExpiresAt: null
+            resetPasswordToken: null,
+            resetPasswordTokenExpiresAt: null
         });
     }
 }

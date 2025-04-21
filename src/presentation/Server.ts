@@ -5,7 +5,7 @@ import express, { Express } from "express";
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from '../swagger';
 
-console.log(JSON.stringify(swaggerSpec, null, 2));
+// console.log(JSON.stringify(swaggerSpec, null, 2));
 
 import { logger } from './middleware/logger.middleware';
 import { authMiddleware } from './middleware/auth.middleware';

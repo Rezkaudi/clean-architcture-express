@@ -40,6 +40,13 @@ export class PostgreSQLUserRepository implements UserRepository {
         return result.rows[0] || null;
     };
 
+    findByResetPasswordToken = async (resetPasswordToken: string): Promise<User | null> => {
+        const query = `SELECT * FROM users WHERE "resetPasswordToken" = $1 LIMIT 1;`;
+        const result = await this.pool.query(query, [resetPasswordToken]);
+
+        return result.rows[0] || null;
+    };
+
     update = async (userId: string, userData: Partial<User>): Promise<User | null> => {
         const fields = Object.keys(userData);
         const values = Object.values(userData);
@@ -47,7 +54,7 @@ export class PostgreSQLUserRepository implements UserRepository {
         if (fields.length === 0) return null;
 
         const setClause = fields.map((field, index) => `"${field}" = $${index + 2}`).join(", ");
-        const query = `UPDATE users SET ${setClause} WHERE _id = $1;`;
+        const query = `UPDATE users SET ${setClause} WHERE _id = $1 RETURNING *;`;
         const result = await this.pool.query(query, [userId, ...values]);
 
         return result.rows[0] || null;
