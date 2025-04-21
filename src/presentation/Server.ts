@@ -14,6 +14,8 @@ import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import rootRoute from './routes/root.routes';
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
+import pathwayRoutes from './routes/pathway.routes';
+
 
 import { setupDependencies } from './dependencies';
 
@@ -26,7 +28,10 @@ export default class Server {
     }
 
     private setupMiddleware() {
-        this.app.use(cors());
+        this.app.use(cors({
+            origin: CONFIG.FRONT_URL,
+            credentials: true
+        }));
         this.app.use(logger);
         this.app.use(express.json());
         this.app.use(cookieParser());
@@ -39,6 +44,7 @@ export default class Server {
         this.app.use("/", rootRoute(this.container.rootController));
         this.app.use('/api/auth', authRoutes(this.container.authController));
         this.app.use('/api/user', userRoutes(this.container.userController));
+        this.app.use('/api/pathway', pathwayRoutes(this.container.pathwayController));
     }
 
     private setupErrorHandlers() {

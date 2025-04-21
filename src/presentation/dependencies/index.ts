@@ -11,6 +11,7 @@ import { CryptoRandomStringGenerator } from '../../infrastructure/srevices/crypt
 // Repositories
 import { MongoUserRepository } from '../../infrastructure/repository/mongo-user.repository';
 import { PostgreSQLUserRepository } from '../../infrastructure/repository/postgresql-user.repository';
+import { PostgreSQLPathwayRepository } from '../../infrastructure/repository/postgresql-pathway.repository';
 
 // Use Cases
 import {
@@ -30,6 +31,9 @@ import { AuthController } from '../controllers/auth.controllers';
 import { RootController } from '../controllers/root.controllers';
 import { UserController } from '../controllers/user.controllers';
 import { DeleteUserAccountUseCase, GetUserInfoUseCase, UpdateUserInfoUseCase } from '../../application/use-cases/user';
+import { CreatePathwayUseCase } from '../../application/use-cases/pathway/create-pathway.usecase';
+import { DeletePathwayUseCase } from '../../application/use-cases/pathway/delete-pathway.usecase';
+import { PathwayController } from '../controllers/pathway.controllers';
 
 
 export const setupDependencies = () => {
@@ -42,6 +46,8 @@ export const setupDependencies = () => {
 
     // Repositories
     const userRepository = new PostgreSQLUserRepository();
+    const pathwayRepository = new PostgreSQLPathwayRepository();
+
     // const userRepository = new MongoUserRepository();
 
     // Services
@@ -122,6 +128,17 @@ export const setupDependencies = () => {
         userRepository,
     );
 
+    // 3- Pathway
+    const createPathwayUseCase = new CreatePathwayUseCase(
+        userRepository,
+        pathwayRepository,
+        uuidGeneratorService
+    )
+
+    const deletePathwayUseCase = new DeletePathwayUseCase(
+        pathwayRepository
+    )
+
     // Controllers
     const authController = new AuthController(
         loginUseCase,
@@ -140,14 +157,22 @@ export const setupDependencies = () => {
         deleteUserAccountUseCase,
     );
 
+    const pathwayController = new PathwayController(
+        createPathwayUseCase,
+        deletePathwayUseCase
+    );
+
+
     const rootController = new RootController()
 
 
     return {
         tokenService,
         userRepository,
+
         authController,
         rootController,
-        userController
+        userController,
+        pathwayController
     };
 };

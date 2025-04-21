@@ -1,4 +1,4 @@
-const CREAT_USER_TABLE = `
+const userTable = `
 
 CREATE TABLE users (
     _id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
