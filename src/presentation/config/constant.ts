@@ -22,5 +22,9 @@ export const Messages = {
     UPDATE_USER_INFO_SUCCESS: "Successful Update User Info",
     DELETE_USER_ACCOUNT_SUCCESS: "Account deleted and session cleared.",
 
+    // pathway
+    CREATE_PATHWAY_SUCCESS: "Pathway Created successfully",
+    DELETE_PATHWAY_SUCCESS: "Pathway Deleted successfully"
+
 
 };
