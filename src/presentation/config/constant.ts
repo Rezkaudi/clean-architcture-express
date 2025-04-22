@@ -24,7 +24,8 @@ export const Messages = {
 
     // pathway
     CREATE_PATHWAY_SUCCESS: "Pathway Created successfully",
-    DELETE_PATHWAY_SUCCESS: "Pathway Deleted successfully"
+    DELETE_PATHWAY_SUCCESS: "Pathway Deleted successfully",
+    GET_PATHWAYS_SUCCESS: "Pathways retrieved successfully",
 
 
 };

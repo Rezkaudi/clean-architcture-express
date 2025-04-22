@@ -40,6 +40,19 @@ export class PostgreSQLPathwayRepository implements PathwayRepository {
         return result.rows[0] || null;
     };
 
+    findByUserId = async (userId: string): Promise<Pathway[]> => {
+        const query = `SELECT * FROM pathways WHERE "userId" = $1 ORDER BY "recordDate" DESC;`;
+        const result = await this.pool.query(query, [userId]);
+
+        // Parse JSON strings back to objects
+        return result.rows.map(row => ({
+            ...row,
+            tissue: typeof row.tissue === 'string' ? JSON.parse(row.tissue) : row.tissue,
+            diseaseInput: typeof row.diseaseInput === 'string' ? JSON.parse(row.diseaseInput) : row.diseaseInput,
+            reactions: typeof row.reactions === 'string' ? JSON.parse(row.reactions) : row.reactions
+        }));
+    };
+
     update = async (id: string, pathway: Partial<Pathway>): Promise<Pathway | null> => {
         const fields = Object.keys(pathway);
         const values = Object.values(pathway);
