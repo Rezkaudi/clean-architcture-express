@@ -1,4 +1,4 @@
-import { CONFIG } from "./config/env";
+import { allowedOrigins, CONFIG } from "./config/env";
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import express, { Express } from "express";
@@ -29,7 +29,15 @@ export default class Server {
 
     private setupMiddleware() {
         this.app.use(cors({
-            origin: CONFIG.FRONT_URL,
+            origin: function (origin, callback) {
+                // allow requests with no origin (like mobile apps or curl requests)
+                if (!origin) return callback(null, true);
+                if (allowedOrigins.includes(origin)) {
+                    return callback(null, true);
+                } else {
+                    return callback(new Error('Not allowed by CORS'));
+                }
+            },
             credentials: true
         }));
         this.app.use(logger);

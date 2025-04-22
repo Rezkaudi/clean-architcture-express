@@ -43,3 +43,10 @@ export const CONFIG = {
     SALT_ROUNDS_BCRYPT: 10
 
 };
+
+export const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'https://protein-pathway.vercel.app',
+    'https://clean-architcture-express.vercel.app',
+];
