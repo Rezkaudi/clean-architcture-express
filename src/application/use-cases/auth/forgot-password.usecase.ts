@@ -29,14 +29,12 @@ export class ForgotPasswordUseCase {
         });
 
         // send email
-        const resetPasswordUrl = `${this.frontEndUrl}/reset-password?resetPasswordToken=${resetPasswordToken}`
+        const resetPasswordUrl = `${this.frontEndUrl}/reset-password/reset?token=${resetPasswordToken}`
         const subject = "Reset Password Verification"
         const template = `
         <h4>Please Reset Password</h4>
         <p>Click the link below to Reset Password:</p>
         <a href="${resetPasswordUrl}">Reset Password</a>
-        <p>If the button doesn't work, use the token below:</p>
-        <code>${resetPasswordToken}</code>
     `;
 
         await this.emailService.send(email, subject, template)
