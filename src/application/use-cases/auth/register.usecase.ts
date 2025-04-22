@@ -58,8 +58,6 @@ export class RegisterUseCase {
             <h4>Please Verify Your Email</h4>
             <p>Click the link below to verify your email:</p>
             <a href="${verifyUrl}">Verify Email</a>
-            <p>If the button doesn't work, use the token below:</p>
-            <code>${verificationToken}</code>
         `;
         await this.emailService.send(registerData.email, subject, template)
 

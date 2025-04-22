@@ -127,12 +127,7 @@ export class AuthController {
             this.setTokenCookie(res, CONFIG.ACCESS_TOKEN_COOKIE, accessToken);
             this.setTokenCookie(res, CONFIG.REFRESH_TOKEN_COOKIE, refreshToken);
 
-            return new ApplicationResponse(res, {
-                statusCode: StatusCodes.OK,
-                success: true,
-                data: {},
-                message: Messages.VERIFY_SUCCESS
-            }).send()
+            res.status(200).redirect(`${CONFIG.FRONT_URL}/profile`);
 
         } catch (error) {
             throw error
