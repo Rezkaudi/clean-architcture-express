@@ -47,6 +47,7 @@ export const CONFIG = {
 export const allowedOrigins = [
     'http://localhost:3000',
     'http://localhost:5173',
+    'http://localhost:8080',
     'https://protein-pathway.vercel.app',
     'https://clean-architcture-express.vercel.app',
 ];
