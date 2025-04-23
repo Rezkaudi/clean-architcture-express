@@ -1,11 +1,10 @@
-import { allowedOrigins, CONFIG } from "./config/env";
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import express, { Express } from "express";
 import swaggerUi from 'swagger-ui-express';
-import swaggerSpec from '../swagger';
 
-// console.log(JSON.stringify(swaggerSpec, null, 2));
+import swaggerSpec from '../swagger';
+import { CONFIG } from "./config/env";
 
 import { logger } from './middleware/logger.middleware';
 import { authMiddleware } from './middleware/auth.middleware';
@@ -14,10 +13,11 @@ import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import rootRoute from './routes/root.routes';
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
-import pathwayRoutes from './routes/pathway.routes';
-
+import userPathwayRoutes from './routes/user-pathway.routes';
+import publicPathwayRoutes from './routes/pubic-pathway.routes';
 
 import { setupDependencies } from './dependencies';
+import { corsOptions } from "./config/corsOptions";
 
 export default class Server {
     private app: Express;
@@ -28,21 +28,10 @@ export default class Server {
     }
 
     private setupMiddleware() {
-        this.app.use(cors({
-            origin: function (origin, callback) {
-                // allow requests with no origin (like mobile apps or curl requests)
-                if (!origin) return callback(null, true);
-                if (allowedOrigins.includes(origin)) {
-                    return callback(null, true);
-                } else {
-                    return callback(new Error('Not allowed by CORS'));
-                }
-            },
-            credentials: true
-        }));
         this.app.use(logger);
         this.app.use(express.json());
         this.app.use(cookieParser());
+        this.app.use(cors(corsOptions));
         this.app.use(express.static("public"));
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(authMiddleware(this.container.tokenService, this.container.userRepository))
@@ -52,7 +41,8 @@ export default class Server {
         this.app.use("/", rootRoute(this.container.rootController));
         this.app.use('/api/auth', authRoutes(this.container.authController));
         this.app.use('/api/user', userRoutes(this.container.userController));
-        this.app.use('/api/pathway', pathwayRoutes(this.container.pathwayController));
+        this.app.use('/api/user/pathway/protein', userPathwayRoutes(this.container.pathwayController));
+        this.app.use('/api/pathway/protein', publicPathwayRoutes(this.container.pathwayController));
     }
 
     private setupErrorHandlers() {

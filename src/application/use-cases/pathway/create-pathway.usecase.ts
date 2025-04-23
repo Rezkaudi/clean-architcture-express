@@ -1,26 +1,16 @@
 import { Pathway } from "../../../domain/entity/pathway.entity";
-
-import { UserRepository } from "../../../domain/repository/user.repository";
 import { PathwayRepository } from "../../../domain/repository/pathway.repository";
 
-import { BadRequestError } from "../../errors/application-error";
 import { UuidGeneratorService } from "../../../infrastructure/srevices/uuid-generator.service";
-
 
 export class CreatePathwayUseCase {
 
     constructor(
-        private readonly userRepository: UserRepository,
         private readonly pathwayRepository: PathwayRepository,
         private readonly uuidGeneratorService: UuidGeneratorService,
     ) { }
 
     execute = async (data: Pathway): Promise<Pathway | null> => {
-        const user = await this.userRepository.findById(data.userId);
-
-        if (!user) {
-            throw new BadRequestError("User not found");
-        }
 
         const pathwayData: Pathway = {
             _id: this.uuidGeneratorService.generate(),

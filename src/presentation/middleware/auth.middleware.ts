@@ -22,6 +22,8 @@ const excludedPaths = [
     "/api/auth/forgot-password",
     "/api/auth/reset-password",
     "/api/auth/resend-verification",
+    "/api/pathway/protein",
+    /^\/api\/pathway\/protein\/[^/]+$/
 ];
 
 export const authMiddleware = (tokenService: TokenService, userRepository: UserRepository) => {
@@ -29,7 +31,15 @@ export const authMiddleware = (tokenService: TokenService, userRepository: UserR
     return async (req: Request, res: Response, next: NextFunction) => {
 
         // Check if the current path matches any excluded path
-        const isExcluded = excludedPaths.some(path => req.path === path);
+        const isExcluded = excludedPaths.some(path => {
+            if (typeof path === "string") {
+                return req.path === path;
+            }
+            if (path instanceof RegExp) {
+                return path.test(req.path);
+            }
+            return false;
+        });
 
         if (isExcluded) {
             return next();

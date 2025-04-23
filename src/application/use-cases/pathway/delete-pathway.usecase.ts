@@ -1,11 +1,10 @@
-import { PathwayRepository } from "../../../domain/repository/pathway.repository";
 import { BadRequestError } from "../../errors/application-error";
+import { PathwayRepository } from "../../../domain/repository/pathway.repository";
 
 export class DeletePathwayUseCase {
 
     constructor(
         private readonly pathwayRepository: PathwayRepository
-
     ) { }
 
     execute = async (id: string): Promise<void> => {

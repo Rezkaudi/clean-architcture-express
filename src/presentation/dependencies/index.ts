@@ -20,21 +20,30 @@ import {
     VerifyEmailUseCase,
     ResetPasswordUseCase,
     ForgotPasswordUseCase,
-    RefreshAccessTokenUseCase,
     UpdatePasswordUseCase,
+    RefreshAccessTokenUseCase,
     ResendVerificationUseCase
 } from '../../application/use-cases/auth';
 
+import {
+    GetUserInfoUseCase,
+    UpdateUserInfoUseCase,
+    DeleteUserAccountUseCase,
+} from '../../application/use-cases/user';
+
+import {
+    CreatePathwayUseCase,
+    DeletePathwayUseCase,
+    UpdatePathwayUseCase,
+    GetAllPathwaysUseCase,
+    GetPathwayByIdUseCase,
+    GetAllUserPathwaysUseCase,
+} from '../../application/use-cases/pathway';
 
 // Controllers
 import { AuthController } from '../controllers/auth.controllers';
 import { RootController } from '../controllers/root.controllers';
 import { UserController } from '../controllers/user.controllers';
-import { DeleteUserAccountUseCase, GetUserInfoUseCase, UpdateUserInfoUseCase } from '../../application/use-cases/user';
-import { CreatePathwayUseCase } from '../../application/use-cases/pathway/create-pathway.usecase';
-import { DeletePathwayUseCase } from '../../application/use-cases/pathway/delete-pathway.usecase';
-import { GetAllPathwaysUseCase } from '../../application/use-cases/pathway/get-all-pathways.usecase';
-import { GetPathwayByIdUseCase } from '../../application/use-cases/pathway/get-pathway-by-id.usecase';
 import { PathwayController } from '../controllers/pathway.controllers';
 
 
@@ -49,7 +58,6 @@ export const setupDependencies = () => {
     // Repositories
     const userRepository = new PostgreSQLUserRepository();
     const pathwayRepository = new PostgreSQLPathwayRepository();
-
     // const userRepository = new MongoUserRepository();
 
     // Services
@@ -132,7 +140,6 @@ export const setupDependencies = () => {
 
     // 3- Pathway
     const createPathwayUseCase = new CreatePathwayUseCase(
-        userRepository,
         pathwayRepository,
         uuidGeneratorService
     )
@@ -148,6 +155,14 @@ export const setupDependencies = () => {
     const getPathwayByIdUseCase = new GetPathwayByIdUseCase(
         pathwayRepository
     );
+
+    const updatePathwayUseCase = new UpdatePathwayUseCase(
+        pathwayRepository
+    )
+
+    const getAllUserPathwaysUseCase = new GetAllUserPathwaysUseCase(
+        pathwayRepository
+    )
 
     // Controllers
     const authController = new AuthController(
@@ -170,8 +185,10 @@ export const setupDependencies = () => {
     const pathwayController = new PathwayController(
         createPathwayUseCase,
         deletePathwayUseCase,
+        updatePathwayUseCase,
         getAllPathwaysUseCase,
-        getPathwayByIdUseCase
+        getPathwayByIdUseCase,
+        getAllUserPathwaysUseCase,
     );
 
 

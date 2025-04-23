@@ -1,6 +1,5 @@
-export interface Pathway {
-    _id?: string,
-    userId: string;
+export interface PublicPathwayDTO {
+    _id: string,
     title: string | null;
     description: string | null;
     species: string | null;
@@ -28,8 +27,6 @@ export interface Pathway {
  *       type: object
  *       properties:
  *         _id:
- *           type: string
- *         userId:
  *           type: string
  *         title:
  *           type: string
