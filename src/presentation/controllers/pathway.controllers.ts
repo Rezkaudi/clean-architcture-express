@@ -5,6 +5,7 @@ import { Messages, StatusCodes } from "../config/constant";
 import { CreatePathwayUseCase } from "../../application/use-cases/pathway/create-pathway.usecase";
 import { DeletePathwayUseCase } from "../../application/use-cases/pathway/delete-pathway.usecase";
 import { GetAllPathwaysUseCase } from "../../application/use-cases/pathway/get-all-pathways.usecase";
+import { GetPathwayByIdUseCase } from "../../application/use-cases/pathway/get-pathway-by-id.usecase";
 
 import { ApplicationResponse } from "../../application/response/application-resposne";
 import { Pathway } from "../../domain/entity/pathway.entity";
@@ -13,7 +14,8 @@ export class PathwayController {
     constructor(
         private readonly createPathwayUseCase: CreatePathwayUseCase,
         private readonly deletePathwayUseCase: DeletePathwayUseCase,
-        private readonly getAllPathwaysUseCase: GetAllPathwaysUseCase
+        private readonly getAllPathwaysUseCase: GetAllPathwaysUseCase,
+        private readonly getPathwayByIdUseCase: GetPathwayByIdUseCase
     ) { }
 
     createPathway = async (req: Request, res: Response): Promise<void> => {
@@ -58,6 +60,23 @@ export class PathwayController {
                 success: true,
                 data: { pathways },
                 message: Messages.GET_PATHWAYS_SUCCESS
+            }).send();
+        } catch (error) {
+            throw error
+        }
+    };
+
+    getPathwayById = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const { id } = req.params;
+            
+            const pathway = await this.getPathwayByIdUseCase.execute(id);
+
+            return new ApplicationResponse(res, {
+                statusCode: StatusCodes.OK,
+                success: true,
+                data: { pathway },
+                message: Messages.GET_PATHWAY_SUCCESS
             }).send();
         } catch (error) {
             throw error

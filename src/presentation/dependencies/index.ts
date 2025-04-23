@@ -34,6 +34,7 @@ import { DeleteUserAccountUseCase, GetUserInfoUseCase, UpdateUserInfoUseCase } f
 import { CreatePathwayUseCase } from '../../application/use-cases/pathway/create-pathway.usecase';
 import { DeletePathwayUseCase } from '../../application/use-cases/pathway/delete-pathway.usecase';
 import { GetAllPathwaysUseCase } from '../../application/use-cases/pathway/get-all-pathways.usecase';
+import { GetPathwayByIdUseCase } from '../../application/use-cases/pathway/get-pathway-by-id.usecase';
 import { PathwayController } from '../controllers/pathway.controllers';
 
 
@@ -144,6 +145,10 @@ export const setupDependencies = () => {
         pathwayRepository
     );
 
+    const getPathwayByIdUseCase = new GetPathwayByIdUseCase(
+        pathwayRepository
+    );
+
     // Controllers
     const authController = new AuthController(
         loginUseCase,
@@ -165,7 +170,8 @@ export const setupDependencies = () => {
     const pathwayController = new PathwayController(
         createPathwayUseCase,
         deletePathwayUseCase,
-        getAllPathwaysUseCase
+        getAllPathwaysUseCase,
+        getPathwayByIdUseCase
     );
 
 
