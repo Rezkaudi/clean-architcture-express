@@ -18,6 +18,13 @@ export interface PublicPathwayDTO {
     recordDate: string | null,
 }
 
+export interface PathwayWithPaginationDTO {
+    totalCount: number,
+    pathways: PublicPathwayDTO[]
+}
+
+
+
 
 /**
  * @swagger

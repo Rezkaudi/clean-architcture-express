@@ -2,14 +2,14 @@ import Database from "../database/postgreSQL";
 
 import { Pathway } from "../../domain/entity/pathway.entity";
 import { PathwayRepository } from "../../domain/repository/pathway.repository";
-import { PublicPathwayDTO } from "../../application/dtos/pathway.dto";
+import { PathwayWithPaginationDTO, PublicPathwayDTO } from "../../application/dtos/pathway.dto";
 
 
 export class PostgreSQLPathwayRepository implements PathwayRepository {
     private pool = Database.getInstance().getPool();
 
-    getAll = async (): Promise<PublicPathwayDTO[]> => {
-        const query = `
+    getAll = async (limit: number, offset: number): Promise<PathwayWithPaginationDTO> => {
+        const dataQuery = `
         SELECT 
             _id,
             title,
@@ -22,11 +22,21 @@ export class PostgreSQLPathwayRepository implements PathwayRepository {
             reactions,
             "recordDate"
         FROM pathways
-        ORDER BY "recordDate" DESC;
+        ORDER BY "recordDate" DESC
+        LIMIT $1 OFFSET $2;
     `;
-        const result = await this.pool.query(query);
+        const countQuery = `SELECT COUNT(*) FROM pathways;`;
 
-        return result.rows;
+
+        const [result, total] = await Promise.all([
+            this.pool.query(dataQuery, [limit, offset]),
+            this.pool.query(countQuery)
+        ]);
+
+        const pathways = result.rows
+        const totalCount = parseInt(total.rows[0].count, 10);
+
+        return { totalCount, pathways };
     };
 
     delete = async (id: string): Promise<void> => {
@@ -66,9 +76,9 @@ export class PostgreSQLPathwayRepository implements PathwayRepository {
         return result.rows[0] || null;
     };
 
-    findByUserId = async (userId: string): Promise<PublicPathwayDTO[]> => {
+    findByUserId = async (userId: string, limit: number, offset: number): Promise<PathwayWithPaginationDTO> => {
 
-        const query = `
+        const dataQuery = `
         SELECT 
             _id,
             title,
@@ -81,12 +91,22 @@ export class PostgreSQLPathwayRepository implements PathwayRepository {
             reactions,
             "recordDate"
         FROM pathways
-        WHERE "userId" = $1
-        ORDER BY "recordDate" DESC;
+        WHERE "userId" = $3
+        ORDER BY "recordDate" DESC
+        LIMIT $1 OFFSET $2;
     `;
-        const result = await this.pool.query(query, [userId]);
+        const countQuery = `SELECT COUNT(*) FROM pathways;`;
 
-        return result.rows;
+
+        const [result, total] = await Promise.all([
+            this.pool.query(dataQuery, [limit, offset, userId]),
+            this.pool.query(countQuery)
+        ]);
+
+        const pathways = result.rows
+        const totalCount = parseInt(total.rows[0].count, 10);
+
+        return { totalCount, pathways };
     };
 
     update = async (id: string, pathway: Partial<Pathway>): Promise<Pathway | null> => {

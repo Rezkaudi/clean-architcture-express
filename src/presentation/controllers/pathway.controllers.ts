@@ -57,12 +57,22 @@ export class PathwayController {
 
     getAllPathways = async (req: Request, res: Response): Promise<void> => {
         try {
-            const pathways = await this.getAllPathwaysUseCase.execute();
+            const pageNumber = parseInt(req.query.pageNumber as string) || 1;
+            const pageSize = parseInt(req.query.pageSize as string) || 10;
+
+            const offset = (pageNumber - 1) * pageSize;
+
+            const { pathways, totalCount } = await this.getAllPathwaysUseCase.execute(pageSize, offset);
 
             return new ApplicationResponse(res, {
                 statusCode: StatusCodes.OK,
                 success: true,
-                data: { pathways },
+                data: {
+                    pageNumber,
+                    pageSize,
+                    totalCount,
+                    pathways
+                },
                 message: Messages.GET_PATHWAYS_SUCCESS
             }).send();
         } catch (error) {
@@ -107,15 +117,25 @@ export class PathwayController {
     getAllUserPathways = async (req: Request, res: Response): Promise<void> => {
         try {
             const userId = req.user._id;
+            const pageNumber = parseInt(req.query.pageNumber as string) || 1;
+            const pageSize = parseInt(req.query.pageSize as string) || 10;
 
-            const pathways = await this.getAllUserPathwaysUseCase.execute(userId);
+            const offset = (pageNumber - 1) * pageSize;
+
+            const { pathways, totalCount } = await this.getAllUserPathwaysUseCase.execute(userId, pageSize, offset);
 
             return new ApplicationResponse(res, {
                 statusCode: StatusCodes.OK,
                 success: true,
-                data: { pathways },
+                data: {
+                    pageNumber,
+                    pageSize,
+                    totalCount,
+                    pathways
+                },
                 message: Messages.GET_PATHWAY_SUCCESS
             }).send();
+
         } catch (error) {
             throw error
         }

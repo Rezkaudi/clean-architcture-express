@@ -1,4 +1,4 @@
-import { PublicPathwayDTO } from "../../dtos/pathway.dto";
+import { PathwayWithPaginationDTO } from "../../dtos/pathway.dto";
 
 import { PathwayRepository } from "../../../domain/repository/pathway.repository";
 
@@ -8,10 +8,10 @@ export class GetAllPathwaysUseCase {
         private readonly pathwayRepository: PathwayRepository
     ) { }
 
-    execute = async (): Promise<PublicPathwayDTO[]> => {
+    execute = async (limit: number, offset: number): Promise<PathwayWithPaginationDTO> => {
 
-        const pathway = await this.pathwayRepository.getAll();
+        const data = await this.pathwayRepository.getAll(limit, offset);
 
-        return pathway
+        return data
     }
 }

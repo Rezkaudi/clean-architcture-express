@@ -1,4 +1,4 @@
-import { PublicPathwayDTO } from "../../dtos/pathway.dto";
+import { PathwayWithPaginationDTO } from "../../dtos/pathway.dto";
 
 import { PathwayRepository } from "../../../domain/repository/pathway.repository";
 
@@ -8,9 +8,9 @@ export class GetAllUserPathwaysUseCase {
         private readonly pathwayRepository: PathwayRepository
     ) { }
 
-    execute = async (userId: string): Promise<PublicPathwayDTO[]> => {
+    execute = async (userId: string, limit: number, offset: number): Promise<PathwayWithPaginationDTO> => {
 
-        const pathway = await this.pathwayRepository.findByUserId(userId);
+        const pathway = await this.pathwayRepository.findByUserId(userId, limit, offset);
 
         return pathway
     }
