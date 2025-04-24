@@ -1,5 +1,7 @@
 import swaggerJSDoc from 'swagger-jsdoc';
 
+import { CONFIG } from './presentation/config/env';
+
 const options = {
   definition: {
     openapi: '3.0.0',
@@ -10,7 +12,7 @@ const options = {
     },
     servers: [
       {
-        url: `${process.env.SERVER_URL}`,
+        url: `${CONFIG.SERVER_URL}`,
         description: 'Development Server',
       },
     ],

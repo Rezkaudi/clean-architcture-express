@@ -10,9 +10,9 @@ import {
     DeleteUserAccountUseCase,
 } from "../../application/use-cases/user";
 
+import { UserInfoDTO } from "../../application/dtos/user.dto";
 
 import { ApplicationResponse } from "../../application/response/application-resposne";
-import { UserInfoDTO } from "../../application/dtos/user.dto";
 
 
 export class UserController {
@@ -44,7 +44,6 @@ export class UserController {
         try {
             const userId = req.user._id
             const { profileImageUrl, firstName, lastName, biography, email, phoneNumber, degree, university, links } = req.body;
-            const jsonLinks = JSON.stringify(links)
 
             const updatedUserData: Partial<UserInfoDTO> = {
                 ...(firstName && { firstName }),
@@ -55,7 +54,7 @@ export class UserController {
                 ...(degree !== undefined && { degree }),
                 ...(university !== undefined && { university }),
                 ...(profileImageUrl !== undefined && { profileImageUrl }),
-                ...(links !== undefined && { links: jsonLinks }),
+                ...(links !== undefined && { links: JSON.stringify(links) }),
             };
 
             const updatedUserInfo = await this.updateUserInfoUseCase.execute(userId, updatedUserData)

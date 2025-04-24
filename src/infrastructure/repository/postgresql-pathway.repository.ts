@@ -2,10 +2,47 @@ import Database from "../database/postgreSQL";
 
 import { Pathway } from "../../domain/entity/pathway.entity";
 import { PathwayRepository } from "../../domain/repository/pathway.repository";
+import { PathwayWithPaginationDTO, PublicPathwayDTO } from "../../application/dtos/pathway.dto";
 
 
 export class PostgreSQLPathwayRepository implements PathwayRepository {
     private pool = Database.getInstance().getPool();
+
+    getAll = async (limit: number, offset: number): Promise<PathwayWithPaginationDTO> => {
+        const dataQuery = `
+        SELECT 
+            _id,
+            title,
+            description,
+            species,
+            category,
+            tissue,
+            "relatedDisease",
+            "diseaseInput",
+            reactions,
+            "recordDate"
+        FROM pathways
+        ORDER BY "recordDate" DESC
+        LIMIT $1 OFFSET $2;
+    `;
+        const countQuery = `SELECT COUNT(*) FROM pathways;`;
+
+
+        const [result, total] = await Promise.all([
+            this.pool.query(dataQuery, [limit, offset]),
+            this.pool.query(countQuery)
+        ]);
+
+        const pathways = result.rows
+        const totalCount = parseInt(total.rows[0].count, 10);
+
+        return { totalCount, pathways };
+    };
+
+    delete = async (id: string): Promise<void> => {
+        const query = `DELETE FROM pathways WHERE _id = $1;`;
+        await this.pool.query(query, [id]);
+    };
 
     create = async (pathway: Pathway): Promise<Pathway> => {
         const query = `
@@ -21,17 +58,16 @@ export class PostgreSQLPathwayRepository implements PathwayRepository {
             pathway.description,
             pathway.species,
             pathway.category,
-            JSON.stringify(pathway.tissue),
+            pathway.tissue,
             pathway.relatedDisease,
-            JSON.stringify(pathway.diseaseInput),
-            JSON.stringify(pathway.reactions),
+            pathway.diseaseInput,
+            pathway.reactions,
             pathway.recordDate
         ];
 
         const result = await this.pool.query(query, values);
         return result.rows[0];
     };
-
 
     findById = async (id: string): Promise<Pathway | null> => {
         const query = `SELECT * FROM pathways WHERE _id = $1 LIMIT 1;`;
@@ -40,17 +76,37 @@ export class PostgreSQLPathwayRepository implements PathwayRepository {
         return result.rows[0] || null;
     };
 
-    findByUserId = async (userId: string): Promise<Pathway[]> => {
-        const query = `SELECT * FROM pathways WHERE "userId" = $1 ORDER BY "recordDate" DESC;`;
-        const result = await this.pool.query(query, [userId]);
+    findByUserId = async (userId: string, limit: number, offset: number): Promise<PathwayWithPaginationDTO> => {
 
-        // Parse JSON strings back to objects
-        return result.rows.map(row => ({
-            ...row,
-            tissue: typeof row.tissue === 'string' ? JSON.parse(row.tissue) : row.tissue,
-            diseaseInput: typeof row.diseaseInput === 'string' ? JSON.parse(row.diseaseInput) : row.diseaseInput,
-            reactions: typeof row.reactions === 'string' ? JSON.parse(row.reactions) : row.reactions
-        }));
+        const dataQuery = `
+        SELECT 
+            _id,
+            title,
+            description,
+            species,
+            category,
+            tissue,
+            "relatedDisease",
+            "diseaseInput",
+            reactions,
+            "recordDate"
+        FROM pathways
+        WHERE "userId" = $3
+        ORDER BY "recordDate" DESC
+        LIMIT $1 OFFSET $2;
+    `;
+        const countQuery = `SELECT COUNT(*) FROM pathways;`;
+
+
+        const [result, total] = await Promise.all([
+            this.pool.query(dataQuery, [limit, offset, userId]),
+            this.pool.query(countQuery)
+        ]);
+
+        const pathways = result.rows
+        const totalCount = parseInt(total.rows[0].count, 10);
+
+        return { totalCount, pathways };
     };
 
     update = async (id: string, pathway: Partial<Pathway>): Promise<Pathway | null> => {
@@ -59,17 +115,15 @@ export class PostgreSQLPathwayRepository implements PathwayRepository {
 
         if (fields.length === 0) return null;
 
+
         const setClause = fields
             .map((field, index) => `"${field}" = $${index + 2}`)
             .join(", ");
 
         const query = `UPDATE pathways SET ${setClause}, updated_at = CURRENT_TIMESTAMP WHERE _id = $1 RETURNING *;`;
         const result = await this.pool.query(query, [id, ...values]);
+
         return result.rows[0] || null;
     };
 
-    delete = async (id: string): Promise<void> => {
-        const query = `DELETE FROM pathways WHERE _id = $1;`;
-        await this.pool.query(query, [id]);
-    };
 }
