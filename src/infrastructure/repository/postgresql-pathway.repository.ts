@@ -2,7 +2,7 @@ import Database from "../database/postgreSQL";
 
 import { Pathway } from "../../domain/entity/pathway.entity";
 import { PathwayRepository } from "../../domain/repository/pathway.repository";
-import { PathwayWithPaginationDTO, PublicPathwayDTO } from "../../application/dtos/pathway.dto";
+import { PathwayWithPaginationDTO } from "../../application/dtos/pathway.dto";
 
 
 export class PostgreSQLPathwayRepository implements PathwayRepository {
@@ -127,3 +127,74 @@ export class PostgreSQLPathwayRepository implements PathwayRepository {
     };
 
 }
+
+
+
+// getAll = async (limit: number, offset: number, filters: FilterPathwayDTO): Promise<PathwayWithPaginationDTO> => {
+
+//     let conditions: string[] = [];
+//     let values: any[] = [];
+//     let idx = 1;
+
+//     if (filters.search) {
+//         conditions.push(`(LOWER(title) LIKE LOWER($${idx}) OR LOWER(description) LIKE LOWER($${idx}))`);
+//         values.push(`%${filters.search}%`);
+//         idx++;
+//     }
+
+//     if (filters.category) {
+//         conditions.push(`category = $${idx}`);
+//         values.push(filters.category);
+//         idx++;
+//     }
+
+//     if (filters.status) {
+//         conditions.push(`status = $${idx}`);
+//         values.push(filters.status);
+//         idx++;
+//     }
+
+//     if (filters.date) {
+//         // Filter by formatted recordDate like '1.1.2024'
+//         conditions.push(`TO_CHAR("recordDate", 'FMDD.FMMM.YYYY') = $${idx}`);
+//         values.push(filters.date);
+//         idx++;
+//     }
+
+//     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+
+//     const dataQuery = `
+//     SELECT 
+//         _id,
+//         title,
+//         description,
+//         species,
+//         category,
+//         status,
+//         tissue,
+//         "relatedDisease",
+//         "diseaseInput",
+//         reactions,
+//         TO_CHAR("recordDate", 'FMDD.FMMM.YYYY') AS "recordDate"
+//     FROM pathways
+//     ${whereClause}
+//     ORDER BY "recordDate" DESC
+//     LIMIT $${idx} OFFSET $${idx + 1};
+// `;
+
+//     values.push(limit, offset);
+
+//     const countQuery = `
+//     SELECT COUNT(*) FROM pathways ${whereClause};
+// `;
+
+//     const [result, total] = await Promise.all([
+//         this.pool.query(dataQuery, values),
+//         this.pool.query(countQuery, values.slice(0, idx - 1))
+//     ]);
+
+//     const pathways = result.rows;
+//     const totalCount = parseInt(total.rows[0].count, 10);
+
+//     return { totalCount, pathways };
+// };

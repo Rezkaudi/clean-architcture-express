@@ -9,6 +9,7 @@ import {
     GetAllPathwaysUseCase,
     GetPathwayByIdUseCase,
     GetAllUserPathwaysUseCase,
+    CreateMockPathwaysUseCase
 } from "../../application/use-cases/pathway";
 
 import { ApplicationResponse } from "../../application/response/application-resposne";
@@ -21,6 +22,7 @@ export class PathwayController {
         private readonly getAllPathwaysUseCase: GetAllPathwaysUseCase,
         private readonly getPathwayByIdUseCase: GetPathwayByIdUseCase,
         private readonly getAllUserPathwaysUseCase: GetAllUserPathwaysUseCase,
+        private readonly createMockPathwaysUseCase: CreateMockPathwaysUseCase,
     ) { }
 
     createPathway = async (req: Request, res: Response): Promise<void> => {
@@ -55,14 +57,41 @@ export class PathwayController {
         }
     };
 
-    getAllPathways = async (req: Request, res: Response): Promise<void> => {
+    createMockPathways = async (req: Request, res: Response): Promise<void> => {
         try {
-            const pageNumber = parseInt(req.query.pageNumber as string) || 1;
-            const pageSize = parseInt(req.query.pageSize as string) || 10;
+            const userId = req.user._id;
+            const { numberOfPathways = 10 } = req.body;
 
-            const offset = (pageNumber - 1) * pageSize;
+            const number = Math.min(Number(numberOfPathways), 500)
 
-            const { pathways, totalCount } = await this.getAllPathwaysUseCase.execute(pageSize, offset);
+            await this.createMockPathwaysUseCase.execute(userId, number);
+
+            return new ApplicationResponse(res, {
+                statusCode: StatusCodes.CREATED,
+                success: true,
+                data: {
+                    created: `create ${number} muck pathways`
+                },
+                message: Messages.CREATE_PATHWAY_SUCCESS
+            }).send();
+
+        } catch (error) {
+            throw error
+        }
+    };
+
+    getAllPathways = async (req: Request, res: Response): Promise<void> => {
+
+        try {
+
+            const { pageNumber, pageSize } = req.query;
+
+            const IpageNumber = parseInt(pageNumber as string) || 1;
+            const IpageSize = parseInt(pageSize as string) || 10;
+
+            const offset = (IpageNumber - 1) * IpageSize;
+
+            const { pathways, totalCount } = await this.getAllPathwaysUseCase.execute(IpageSize, offset);
 
             return new ApplicationResponse(res, {
                 statusCode: StatusCodes.OK,

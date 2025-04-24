@@ -1,6 +1,6 @@
 import { Pathway } from "../entity/pathway.entity";
 
-import { PathwayWithPaginationDTO } from "../../application/dtos/pathway.dto";
+import { FilterPathwayDTO, PathwayWithPaginationDTO } from "../../application/dtos/pathway.dto";
 
 export interface PathwayRepository {
     getAll(limit: number, offset: number): Promise<PathwayWithPaginationDTO>;

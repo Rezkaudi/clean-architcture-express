@@ -1,0 +1,24 @@
+paths:
+  /api/user/pathway/protein/mock:
+    post:
+      summary: Create mock pathways for the authenticated user
+      tags: [TestMuck]
+      operationId: createMockPathways
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                numberOfPathways:
+                  type: integer
+                  minimum: 1
+                  maximum: 500
+                  example: 10
+              required:
+                - numberOfPathways
+        "500":
+          description: Internal server error
+      security:
+        - bearerAuth: []
