@@ -1,0 +1,16 @@
+paths:
+  /api/user/me:
+    get:
+      summary: Get current user info
+      tags: [User]
+      security:
+        - cookieAuth: []
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        401:
+          description: Unauthorized

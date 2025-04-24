@@ -1,6 +1,6 @@
 import swaggerJSDoc from 'swagger-jsdoc';
 
-import { CONFIG } from './presentation/config/env';
+import { CONFIG } from './env';
 
 const options = {
   definition: {
@@ -18,15 +18,20 @@ const options = {
     ],
     components: {
       securitySchemes: {
-        cookieAuth: {
+        cookieAuthAccess: {
           type: 'apiKey',
           in: 'cookie',
           name: 'accessToken',
         },
+        cookieAuthRefresh: {
+          type: 'apiKey',
+          in: 'cookie',
+          name: 'refreshToken',
+        },
       },
     },
   },
-  apis: ['src/**/*.ts']
+  apis: ['src/**/*.swagger.yaml']
 };
 
 const swaggerSpec = swaggerJSDoc(options);

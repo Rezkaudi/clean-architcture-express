@@ -1,0 +1,178 @@
+components:
+  schemas:
+    RegisterDTO:
+      type: object
+      required:
+        - email
+        - firstName
+        - lastName
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        lastName:
+          type: string
+        password:
+          type: string
+
+    LoginDTO:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    AuthResponseDTO:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+
+    ApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        statusCode:
+          type: integer
+        message:
+          type: string
+        data:
+          type: object
+
+    UserInfoDTO:
+      type: object
+      properties:
+        profileImageUrl:
+          type: string
+          nullable: true
+        firstName:
+          type: string
+        lastName:
+          type: string
+        biography:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+        phoneNumber:
+          type: string
+          nullable: true
+        degree:
+          type: string
+          nullable: true
+        university:
+          type: string
+          nullable: true
+        links:
+          type: array
+          nullable: true
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              url:
+                type: string
+
+    ResetPasswordDTO:
+      type: object
+      required:
+        - verificationToken
+        - newPassword
+      properties:
+        verificationToken:
+          type: string
+        newPassword:
+          type: string
+
+    ForgotPasswordDTO:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+
+    UpdatePasswordDTO:
+      type: object
+      required:
+        - userId
+        - currentPassword
+        - newPassword
+      properties:
+        userId:
+          type: string
+        currentPassword:
+          type: string
+        newPassword:
+          type: string
+
+    ResendVerifyEmailDTO:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+
+    Pathway:
+      type: object
+      properties:
+        _id:
+          type: string
+        title:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        species:
+          type: string
+          nullable: true
+        category:
+          type: string
+          nullable: true
+        tissue:
+          type: object
+          nullable: true
+          properties:
+            id:
+              type: string
+            parent:
+              type: string
+            text:
+              type: string
+        relatedDisease:
+          type: string
+          nullable: true
+        diseaseInput:
+          type: object
+          nullable: true
+          properties:
+            Disease_id:
+              type: string
+            Disease_name:
+              type: string
+        reactions:
+          type: array
+          nullable: true
+          items:
+            type: object
+        recordDate:
+          type: string
+          nullable: true
+          format: date

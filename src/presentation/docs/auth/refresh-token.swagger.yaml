@@ -1,0 +1,20 @@
+paths:
+  /api/auth/refresh-token:
+    post:
+      summary: Refresh access token
+      tags: [Auth]
+      responses:
+        200:
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+          headers:
+            Set-Cookie:
+              description: HttpOnly cookie containing the new access token
+              schema:
+                type: string
+                example: accessToken=def456; HttpOnly; Secure
+        401:
+          description: Invalid or missing refresh token

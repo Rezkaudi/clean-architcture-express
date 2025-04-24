@@ -1,0 +1,22 @@
+/api/pathway/protein/{id}:
+  get:
+    summary: Get a public protein pathway by ID
+    tags: [PublicPathway]
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: The ID of the public pathway to retrieve
+    responses:
+      200:
+        description: Public protein pathway details
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Pathway"
+      404:
+        description: Pathway not found
+      500:
+        description: Internal server error

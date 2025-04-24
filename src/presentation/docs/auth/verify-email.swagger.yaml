@@ -1,0 +1,20 @@
+paths:
+  /api/auth/verify-email:
+    get:
+      summary: Verify user email
+      tags: [Auth]
+      parameters:
+        - in: query
+          name: verificationToken
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Email verified successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        400:
+          description: Invalid or expired verification token

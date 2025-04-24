@@ -1,0 +1,16 @@
+paths:
+  /api/user/me:
+    delete:
+      summary: Delete current user account
+      tags: [User]
+      security:
+        - cookieAuth: []
+      responses:
+        200:
+          description: Account deleted and session cleared
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        401:
+          description: Unauthorized

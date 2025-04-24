@@ -1,0 +1,20 @@
+paths:
+  /api/auth/resend-verification:
+    post:
+      summary: Resend email verification token
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResendVerifyEmailDTO"
+      responses:
+        200:
+          description: Verification email resent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        400:
+          description: Bad request

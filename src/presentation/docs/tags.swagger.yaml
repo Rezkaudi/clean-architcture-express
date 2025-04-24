@@ -1,0 +1,9 @@
+tags:
+  - name: Auth
+    description: Authentication and authorization endpoints
+  - name: User
+    description: User management endpoints
+  - name: UserPathway
+    description: Pathway management endpoints
+  - name: PublicPathway
+    description: Public access to protein pathway data
