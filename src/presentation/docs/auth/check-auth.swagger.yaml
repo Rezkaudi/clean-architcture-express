@@ -1,0 +1,17 @@
+paths:
+  /api/auth/check-auth:
+    get:
+      summary: Check authentication status
+      tags: [Auth]
+      security:
+        - cookieAuthAccess: []
+        - cookieAuthRefresh: []
+      responses:
+        200:
+          description: User is authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        401:
+          description: Unauthorized

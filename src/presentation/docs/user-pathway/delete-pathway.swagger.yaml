@@ -1,0 +1,25 @@
+paths:
+  /api/user/pathway/protein/{id}:
+    delete:
+      summary: Delete a pathway by ID
+      tags: [UserPathway]
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the pathway to delete
+      responses:
+        200:
+          description: Pathway deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        401:
+          description: Unauthorized
+        404:
+          description: Pathway not found

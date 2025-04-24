@@ -1,0 +1,54 @@
+paths:
+  /api/user/pathway/protein:
+    post:
+      summary: Create a new pathway
+      tags: [UserPathway]
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - species
+                - category
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                species:
+                  type: string
+                category:
+                  type: string
+                tissue:
+                  type: object
+                  description: JSON object for tissue data
+                relatedDisease:
+                  type: string
+                diseaseInput:
+                  type: object
+                  description: JSON object for disease input
+                reactions:
+                  type: array
+                  items:
+                    type: object
+                  description: Array of reaction objects
+                recordDate:
+                  type: string
+                  format: date
+      responses:
+        201:
+          description: Pathway created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized

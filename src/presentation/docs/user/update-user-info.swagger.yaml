@@ -1,0 +1,22 @@
+paths:
+  /api/user/me:
+    put:
+      summary: Update current user info
+      tags: [User]
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInfoDTO"
+      responses:
+        200:
+          description: User info updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        401:
+          description: Unauthorized

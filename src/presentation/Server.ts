@@ -3,8 +3,8 @@ import cookieParser from 'cookie-parser';
 import express, { Express } from "express";
 import swaggerUi from 'swagger-ui-express';
 
-import swaggerSpec from '../swagger';
 import { CONFIG } from "./config/env";
+import swaggerSpec from './config/swagger';
 
 import { logger } from './middleware/logger.middleware';
 import { authMiddleware } from './middleware/auth.middleware';

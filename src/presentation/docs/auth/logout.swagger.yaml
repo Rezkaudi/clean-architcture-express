@@ -1,0 +1,17 @@
+paths:
+  /api/auth/logout:
+    post:
+      summary: Logout current user
+      tags: [Auth]
+      security:
+        - cookieAuthAccess: []
+        - cookieAuthRefresh: []
+      responses:
+        200:
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        401:
+          description: Unauthorized

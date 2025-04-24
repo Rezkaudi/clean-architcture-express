@@ -1,0 +1,58 @@
+paths:
+  /api/user/pathway/protein/{id}:
+    put:
+      summary: Update a pathway by ID
+      tags: [UserPathway]
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the pathway to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                species:
+                  type: string
+                category:
+                  type: string
+                tissue:
+                  type: object
+                  description: JSON object for tissue data
+                relatedDisease:
+                  type: string
+                diseaseInput:
+                  type: object
+                  description: JSON object for disease input
+                reactions:
+                  type: array
+                  items:
+                    type: object
+                  description: Array of reaction objects
+                recordDate:
+                  type: string
+                  format: date
+      responses:
+        200:
+          description: Pathway updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        400:
+          description: Bad request
+        401:
+          description: Unauthorized
+        404:
+          description: Pathway not found

@@ -1,0 +1,55 @@
+paths:
+  /api/user/pathway/protein:
+    get:
+      summary: Get all pathways for the authenticated user
+      description: Retrieves a paginated list of protein pathways belonging to the authenticated user.
+      tags: [UserPathway]
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: pageNumber
+          in: query
+          required: false
+          description: Page number for pagination (default is 1)
+          schema:
+            type: integer
+            default: 1
+        - name: pageSize
+          in: query
+          required: false
+          description: Number of items per page (default is 10)
+          schema:
+            type: integer
+            default: 10
+      responses:
+        200:
+          description: List of user pathways
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      pageNumber:
+                        type: integer
+                        example: 1
+                      pageSize:
+                        type: integer
+                        example: 10
+                      totalCount:
+                        type: integer
+                        example: 17
+                      pathways:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Pathway"
+                  message:
+                    type: string
+                    example: Pathways retrieved successfully
+        401:
+          description: Unauthorized
