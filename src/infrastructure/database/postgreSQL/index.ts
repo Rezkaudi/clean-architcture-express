@@ -1,10 +1,9 @@
-import { Pool } from "pg"
+import { Pool, PoolClient } from "pg"
 import { CONFIG } from "../../../presentation/config/env";
 
 
 export default class Database {
     private static instance: Database;
-    private isConnected: boolean = false;
     private pool: Pool | null = null;
 
     private constructor() { }
@@ -16,8 +15,28 @@ export default class Database {
         return Database.instance;
     }
 
+    private createPool(): void {
+        this.pool = new Pool({
+            user: CONFIG.POSTGRES_USER,
+            host: CONFIG.POSTGRES_HOST,
+            database: CONFIG.POSTGRES_DATABASE,
+            password: CONFIG.POSTGRES_PASSWORD,
+            port: CONFIG.POSTGRES_PORT as number,
+            ssl: { rejectUnauthorized: false },
+            max: 10,
+            idleTimeoutMillis: 30000,
+            connectionTimeoutMillis: 10000,
+            keepAlive: true,
+        });
+
+        this.pool.on("error", (err: Error) => {
+            console.error("Unexpected PostgreSQL client error", err);
+            this.pool = null; // Reset the pool to trigger reconnect
+        });
+    }
+
     public async connect(): Promise<void> {
-        if (this.isConnected) {
+        if (this.pool) {
             console.log("PostgreSQL already connected.");
             return;
         }
@@ -25,31 +44,16 @@ export default class Database {
         console.log(`New connection to PostgreSQL`);
         try {
 
-            this.pool = new Pool({
-                user: CONFIG.POSTGRES_USER,
-                host: CONFIG.POSTGRES_HOST,
-                database: CONFIG.POSTGRES_DATABASE,
-                password: CONFIG.POSTGRES_PASSWORD,
-                port: CONFIG.POSTGRES_PORT as number,
-                ssl: true
-            })
+            this.createPool();
 
-            // or
-            // this.pool = new Pool({
-            //     connectionString: CONFIG.DEV_POSTGRESQL_URI,
-            // });
-
-            await this.pool.connect();
-            this.isConnected = true;
+            const client: PoolClient = await this.pool!.connect();
+            client.release(); // Important: Always release the client!
 
             console.log("Connected to PostgreSQL");
 
         } catch (error) {
-            if (error instanceof Error) {
-                console.log("Error connecting to PostgreSQL:", error.message);
-            } else {
-                console.log("Unexpected error:", error);
-            }
+            console.error("Error connecting to PostgreSQL:", error);
+            this.pool = null;
             process.exit(1);
         }
     }
