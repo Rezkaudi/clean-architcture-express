@@ -2,7 +2,7 @@ paths:
   /api/user/pathway/protein:
     get:
       summary: Get all pathways for the authenticated user
-      description: Retrieves a paginated list of protein pathways belonging to the authenticated user.
+      description: Retrieves a paginated, filterable, and sortable list of protein pathways belonging to the authenticated user.
       tags: [UserPathway]
       security:
         - cookieAuth: []
@@ -21,6 +21,40 @@ paths:
           schema:
             type: integer
             default: 10
+        - name: search
+          in: query
+          required: false
+          description: Search term to match against title, description, species, category, or related disease
+          schema:
+            type: string
+        - name: category
+          in: query
+          required: false
+          description: Filter by category
+          schema:
+            type: string
+        - name: year
+          in: query
+          required: false
+          description: Filter pathways by record year (e.g., 2024)
+          schema:
+            type: string
+        - name: orderBy
+          in: query
+          required: false
+          description: Field to order by (title, species, category, recordDate)
+          schema:
+            type: string
+            enum: [title, species, category, recordDate]
+            default: recordDate
+        - name: orderDirection
+          in: query
+          required: false
+          description: Order direction (ASC for ascending, DESC for descending)
+          schema:
+            type: string
+            enum: [ASC, DESC]
+            default: DESC
       responses:
         200:
           description: List of user pathways
@@ -53,3 +87,5 @@ paths:
                     example: Pathways retrieved successfully
         401:
           description: Unauthorized
+        500:
+          description: Internal server error

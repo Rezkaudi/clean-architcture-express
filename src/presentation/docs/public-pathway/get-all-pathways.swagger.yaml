@@ -2,7 +2,7 @@ paths:
   /api/pathway/protein:
     get:
       summary: Get all public protein pathways
-      description: Retrieves a paginated list of public protein pathways.
+      description: Retrieves a paginated, filterable, and sortable list of public protein pathways.
       tags: [PublicPathway]
       parameters:
         - name: pageNumber
@@ -19,9 +19,43 @@ paths:
           schema:
             type: integer
             default: 10
+        - name: search
+          in: query
+          required: false
+          description: Search term to match against title, description, species, category, or related disease
+          schema:
+            type: string
+        - name: category
+          in: query
+          required: false
+          description: Filter by category
+          schema:
+            type: string
+        - name: year
+          in: query
+          required: false
+          description: Filter pathways by record year (e.g., 2024)
+          schema:
+            type: string
+        - name: orderBy
+          in: query
+          required: false
+          description: Field to order by (title, species, category, recordDate)
+          schema:
+            type: string
+            enum: [title, species, category, recordDate]
+            default: recordDate
+        - name: orderDirection
+          in: query
+          required: false
+          description: Order direction (ASC for ascending, DESC for descending)
+          schema:
+            type: string
+            enum: [ASC, DESC]
+            default: DESC
       responses:
         200:
-          description: List of all public protein pathways
+          description: List of public protein pathways
           content:
             application/json:
               schema:

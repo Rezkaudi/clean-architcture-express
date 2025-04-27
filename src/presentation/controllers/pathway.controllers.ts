@@ -13,6 +13,7 @@ import {
 } from "../../application/use-cases/pathway";
 
 import { ApplicationResponse } from "../../application/response/application-resposne";
+import { FilterPathwayDTO } from "../../application/dtos/pathway.dto";
 
 export class PathwayController {
     constructor(
@@ -81,31 +82,46 @@ export class PathwayController {
     };
 
     getAllPathways = async (req: Request, res: Response): Promise<void> => {
-
         try {
+            const {
+                pageNumber = '1',
+                pageSize = '10',
+                search = '',
+                category = '',
+                year = '',
+                orderBy = 'recordDate',
+                orderDirection = 'DESC'
+            } = req.query;
 
-            const { pageNumber, pageSize } = req.query;
-
-            const IpageNumber = parseInt(pageNumber as string) || 1;
-            const IpageSize = parseInt(pageSize as string) || 10;
+            const IpageNumber = parseInt(pageNumber as string, 10);
+            const IpageSize = parseInt(pageSize as string, 10);
 
             const offset = (IpageNumber - 1) * IpageSize;
 
-            const { pathways, totalCount } = await this.getAllPathwaysUseCase.execute(IpageSize, offset);
+            const filters: FilterPathwayDTO = {
+                search: search ? (search as string) : null,
+                category: category ? (category as string) : null,
+                year: year ? (year as string) : null,
+                orderBy: orderBy ? (orderBy as string) : 'recordDate',
+                orderDirection: (orderDirection as string)?.toUpperCase() === 'ASC' ? 'ASC' : 'DESC'
+            }
+
+            const { pathways, totalCount } = await this.getAllPathwaysUseCase.execute(IpageSize, offset, filters);
 
             return new ApplicationResponse(res, {
                 statusCode: StatusCodes.OK,
                 success: true,
                 data: {
-                    pageNumber,
-                    pageSize,
+                    pageNumber: IpageNumber,
+                    pageSize: IpageSize,
                     totalCount,
                     pathways
                 },
                 message: Messages.GET_PATHWAYS_SUCCESS
             }).send();
+
         } catch (error) {
-            throw error
+            throw error;
         }
     };
 
@@ -146,19 +162,37 @@ export class PathwayController {
     getAllUserPathways = async (req: Request, res: Response): Promise<void> => {
         try {
             const userId = req.user._id;
-            const pageNumber = parseInt(req.query.pageNumber as string) || 1;
-            const pageSize = parseInt(req.query.pageSize as string) || 10;
+            const {
+                pageNumber = '1',
+                pageSize = '10',
+                search = '',
+                category = '',
+                year = '',
+                orderBy = 'recordDate',
+                orderDirection = 'DESC'
+            } = req.query;
 
-            const offset = (pageNumber - 1) * pageSize;
+            const IpageNumber = parseInt(pageNumber as string, 10);
+            const IpageSize = parseInt(pageSize as string, 10);
 
-            const { pathways, totalCount } = await this.getAllUserPathwaysUseCase.execute(userId, pageSize, offset);
+            const offset = (IpageNumber - 1) * IpageSize;
+
+            const filters: FilterPathwayDTO = {
+                search: search ? (search as string) : null,
+                category: category ? (category as string) : null,
+                year: year ? (year as string) : null,
+                orderBy: orderBy ? (orderBy as string) : 'recordDate',
+                orderDirection: (orderDirection as string)?.toUpperCase() === 'ASC' ? 'ASC' : 'DESC'
+            };
+
+            const { pathways, totalCount } = await this.getAllUserPathwaysUseCase.execute(userId, IpageSize, offset, filters);
 
             return new ApplicationResponse(res, {
                 statusCode: StatusCodes.OK,
                 success: true,
                 data: {
-                    pageNumber,
-                    pageSize,
+                    pageNumber: IpageNumber,
+                    pageSize: IpageSize,
                     totalCount,
                     pathways
                 },
@@ -166,9 +200,10 @@ export class PathwayController {
             }).send();
 
         } catch (error) {
-            throw error
+            throw error;
         }
     };
+
 
     updatePathway = async (req: Request, res: Response): Promise<void> => {
         try {
