@@ -7,3 +7,5 @@ tags:
     description: Pathway management endpoints
   - name: PublicPathway
     description: Public access to protein pathway data
+  - name: TestMuck
+    description: Muck Data

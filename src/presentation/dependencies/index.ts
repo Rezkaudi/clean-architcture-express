@@ -38,6 +38,7 @@ import {
     GetAllPathwaysUseCase,
     GetPathwayByIdUseCase,
     GetAllUserPathwaysUseCase,
+    CreateMockPathwaysUseCase,
 } from '../../application/use-cases/pathway';
 
 // Controllers
@@ -144,6 +145,11 @@ export const setupDependencies = () => {
         uuidGeneratorService
     )
 
+    const createMockPathwaysUseCase = new CreateMockPathwaysUseCase(
+        pathwayRepository,
+        uuidGeneratorService
+    )
+
     const deletePathwayUseCase = new DeletePathwayUseCase(
         pathwayRepository
     )
@@ -189,6 +195,7 @@ export const setupDependencies = () => {
         getAllPathwaysUseCase,
         getPathwayByIdUseCase,
         getAllUserPathwaysUseCase,
+        createMockPathwaysUseCase
     );
 
 

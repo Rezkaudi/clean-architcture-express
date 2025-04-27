@@ -57,6 +57,7 @@ export const authMiddleware = (tokenService: TokenService, userRepository: UserR
         }
 
         try {
+
             const { userId } = await tokenService.verify(accessToken, CONFIG.JWT_SECRET_ACCESS_TOKEN.token) as { userId: string }
 
             const user = await userRepository.findById(userId);
@@ -69,7 +70,7 @@ export const authMiddleware = (tokenService: TokenService, userRepository: UserR
             }
 
         } catch (error) {
-            throw new UnauthorizedError((error as any).message)
+            throw new ForbiddenError((error as any).message)
         }
     };
 };

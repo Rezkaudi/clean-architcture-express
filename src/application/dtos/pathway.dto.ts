@@ -20,5 +20,21 @@ export interface PublicPathwayDTO {
 
 export interface PathwayWithPaginationDTO {
     totalCount: number,
-    pathways: PublicPathwayDTO[]
+    pathways: PathwayResponseDTO[]
+}
+
+export interface PathwayResponseDTO {
+    _id: string,
+    title: string | null;
+    species: string | null;
+    category: string | null;
+    recordDate: string | null,
+}
+
+export interface FilterPathwayDTO {
+    search: string | null,
+    category: string | null,
+    year: string | null,
+    orderBy: string,
+    orderDirection: 'ASC' | 'DESC'
 }
