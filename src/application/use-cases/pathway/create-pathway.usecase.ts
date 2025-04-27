@@ -23,7 +23,8 @@ export class CreatePathwayUseCase {
             relatedDisease: data.relatedDisease || null,
             diseaseInput: data.diseaseInput || null,
             reactions: data.reactions || null,
-            recordDate: data.recordDate || null
+            recordDate: data.recordDate || null,
+            pubMeds: data.pubMeds || []
         }
 
         const pathway = await this.pathwayRepository.create(pathwayData);

@@ -29,7 +29,7 @@ export class PathwayController {
     createPathway = async (req: Request, res: Response): Promise<void> => {
         try {
             const userId = req.user._id;
-            const { title, description, species, category, tissue, relatedDisease, diseaseInput, reactions, recordDate } = req.body;
+            const { title, description, species, category, tissue, relatedDisease, diseaseInput, reactions, recordDate, pubMeds } = req.body;
 
             const pathwayData = {
                 userId,
@@ -42,6 +42,7 @@ export class PathwayController {
                 tissue: JSON.stringify(tissue) as any,
                 reactions: JSON.stringify(reactions) as any,
                 diseaseInput: JSON.stringify(diseaseInput) as any,
+                pubMeds: JSON.stringify(pubMeds) as any,
             };
 
             const createdPathway = await this.createPathwayUseCase.execute(pathwayData);

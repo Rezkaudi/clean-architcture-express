@@ -41,6 +41,11 @@ paths:
                 recordDate:
                   type: string
                   format: date
+                pubMeds:
+                  type: array
+                  description: JSON object for pubMeds id [{"id":"111"},{"id":"111"}]
+                  items:
+                    type: object
       responses:
         201:
           description: Pathway created successfully

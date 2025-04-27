@@ -12,6 +12,7 @@ CREATE TABLE pathways (
     "diseaseInput" JSONB DEFAULT '{}'::jsonb,
     reactions JSONB DEFAULT '[]'::jsonb,
     "recordDate" VARCHAR(255),
+    "pubMeds" JSONB DEFAULT '{}'::jsonb,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
