@@ -90,8 +90,8 @@ export class PostgreSQLPathwayRepository implements PathwayRepository {
 
     create = async (pathway: Pathway): Promise<Pathway> => {
         const query = `
-            INSERT INTO pathways (_id, "userId",title,description,species,category,tissue,"relatedDisease","diseaseInput",reactions,"recordDate") 
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+            INSERT INTO pathways (_id, "userId",title,description,species,category,tissue,"relatedDisease","diseaseInput",reactions,"recordDate","pubMeds") 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
             RETURNING *;
         `;
 
@@ -106,7 +106,8 @@ export class PostgreSQLPathwayRepository implements PathwayRepository {
             pathway.relatedDisease,
             pathway.diseaseInput,
             pathway.reactions,
-            pathway.recordDate
+            pathway.recordDate,
+            pathway.pubMeds
         ];
 
         const result = await this.pool.query(query, values);

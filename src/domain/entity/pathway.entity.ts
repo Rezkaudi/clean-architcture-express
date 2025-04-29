@@ -17,4 +17,7 @@ export interface Pathway {
     } | null,
     reactions: any | null,
     recordDate: string | null,
+    pubMeds: {
+        id: string,
+    }[],
 }

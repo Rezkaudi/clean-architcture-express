@@ -3,7 +3,8 @@ paths:
     post:
       summary: Create mock pathways for the authenticated user
       tags: [TestMuck]
-      operationId: createMockPathways
+      security:
+        - cookieAuth: []
       requestBody:
         required: true
         content:
@@ -18,7 +19,12 @@ paths:
                   example: 10
               required:
                 - numberOfPathways
-        "500":
+      responses:
+        201:
+          description: Pathway created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        500:
           description: Internal server error
-      security:
-        - bearerAuth: []

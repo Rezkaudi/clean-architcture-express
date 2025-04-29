@@ -176,3 +176,8 @@ components:
           type: string
           nullable: true
           format: date
+        pubMeds:
+          type: array
+          nullable: true
+          items:
+            type: object
