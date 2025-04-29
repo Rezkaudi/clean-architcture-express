@@ -5,7 +5,7 @@ const userPathwayRoutes = (pathwayController: PathwayController): Router => {
     const router = Router();
 
     router.get('/', pathwayController.getAllUserPathways.bind(pathwayController));
-    router.get('/:id', pathwayController.getPathwayById.bind(pathwayController));
+    router.get('/:id', pathwayController.getUserPathwayById.bind(pathwayController));
     router.post('/', pathwayController.createPathway.bind(pathwayController));
     router.post('/mock', pathwayController.createMockPathways.bind(pathwayController));
     router.put('/:id', pathwayController.updatePathway.bind(pathwayController));
