@@ -143,6 +143,27 @@ export class PathwayController {
         }
     };
 
+    getUserPathwayById = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const { id } = req.params;
+            const userId = req.user._id as string;
+
+            const pathway = await this.getPathwayByIdUseCase.execute(id);
+
+            return new ApplicationResponse(res, {
+                statusCode: StatusCodes.OK,
+                success: true,
+                data: {
+                    isOwner: userId === pathway.userId,
+                    pathway
+                },
+                message: Messages.GET_PATHWAY_SUCCESS
+            }).send();
+        } catch (error) {
+            throw error
+        }
+    };
+
     deletePathway = async (req: Request, res: Response): Promise<void> => {
         try {
             const { id } = req.params;
