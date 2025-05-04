@@ -89,6 +89,8 @@ export class PostgreSQLPathwayRepository implements PathwayRepository {
     };
 
     create = async (pathway: Pathway): Promise<Pathway> => {
+        const cleanString = (value: any) => typeof value === 'string' ? value.trim().toLowerCase() : value;
+
         const query = `
             INSERT INTO pathways (_id, "userId",title,description,species,category,tissue,"relatedDisease","diseaseInput",reactions,"recordDate","pubMeds") 
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
@@ -98,12 +100,12 @@ export class PostgreSQLPathwayRepository implements PathwayRepository {
         const values = [
             pathway._id,
             pathway.userId,
-            pathway.title,
-            pathway.description,
-            pathway.species,
-            pathway.category,
+            cleanString(pathway.title),
+            cleanString(pathway.description),
+            cleanString(pathway.species),
+            cleanString(pathway.category),
             pathway.tissue,
-            pathway.relatedDisease,
+            cleanString(pathway.relatedDisease),
             pathway.diseaseInput,
             pathway.reactions,
             pathway.recordDate,
