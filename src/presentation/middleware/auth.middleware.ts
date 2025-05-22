@@ -23,7 +23,8 @@ const excludedPaths = [
     "/api/auth/reset-password",
     "/api/auth/resend-verification",
     "/api/pathway/protein",
-    /^\/api\/pathway\/protein\/[^/]+$/
+    /^\/api\/pathway\/protein\/[^/]+$/,
+    "/preview"
 ];
 
 export const authMiddleware = (tokenService: TokenService, userRepository: UserRepository) => {
