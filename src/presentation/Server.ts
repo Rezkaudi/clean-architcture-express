@@ -18,6 +18,8 @@ import publicPathwayRoutes from './routes/pubic-pathway.routes';
 
 import { setupDependencies } from './dependencies';
 import { corsOptions } from "./config/corsOptions";
+import { fetchMeta } from './config/fetchMeta';
+
 
 export default class Server {
     private app: Express;
@@ -43,6 +45,21 @@ export default class Server {
         this.app.use('/api/user', userRoutes(this.container.userController));
         this.app.use('/api/user/pathway/protein', userPathwayRoutes(this.container.pathwayController));
         this.app.use('/api/pathway/protein', publicPathwayRoutes(this.container.pathwayController));
+
+        this.app.get('/preview', async (req, res) => {
+            const { url } = req.query;
+
+            if (!url) {
+                res.status(400).json({ error: "Missing 'url' parameter" });
+            }
+
+            try {
+                const data = await fetchMeta(url!.toString());
+                res.json(data);
+            } catch (e) {
+                res.status(500).json({ error: e instanceof Error ? e.message : 'Unknown error', url });
+            }
+        });
     }
 
     private setupErrorHandlers() {
